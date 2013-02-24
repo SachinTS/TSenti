@@ -1,1 +1,8 @@
 Tweet Sentiment Analysis
+
+Analysing tweets on a given topic using Multinomial Naive Bayes classifier
+
+Framework       : Java EE 6
+Server          : Apache Tomcat 7
+JAR's Required  : available in WEB-INF/lib, please include
+Welcome Page    : Generate.html 
