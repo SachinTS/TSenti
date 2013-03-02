@@ -41,9 +41,9 @@ public class ClassifiedTweet {
 		this.tweetContent = tweetContent;
 	}
 
-	public Collection<String> getTweetContentAsTokens(){
+/*	public Collection<String> getTweetContentAsTokens(){
 		if (tweetContent==null) return Lists.newArrayList();
 		return Lists.newArrayList(Splitter.on(SPACE).omitEmptyStrings().trimResults().split(tweetContent));
-	}
+	}*/
 
 }

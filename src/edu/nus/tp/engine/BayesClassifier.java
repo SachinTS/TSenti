@@ -2,8 +2,6 @@ package edu.nus.tp.engine;
 
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.common.collect.Lists;
@@ -39,11 +37,11 @@ public class BayesClassifier  {
 	 * 
 	 * @param eachClassifiedTweet
 	 */
-	private void train(ClassifiedTweet eachClassifiedTweet) {
+	public void train(ClassifiedTweet eachClassifiedTweet) {
 		
 		Collection<String> eachParsedTweet=null;
 		
-		eachParsedTweet=FilterUtils.doAllFilters(eachClassifiedTweet.getTweetContentAsTokens());
+		eachParsedTweet=FilterUtils.doAllFilters(eachClassifiedTweet.getTweetContent());
 		
 		if (eachParsedTweet!=null && eachParsedTweet.size()>0){
 			
@@ -71,7 +69,7 @@ public class BayesClassifier  {
 	 */
 	public ClassifiedTweet classify(ClassifiedTweet unClassifiedTweet){
 		
-		Collection<String> eachParsedTweet = FilterUtils.doAllFilters(unClassifiedTweet.getTweetContentAsTokens());
+		Collection<String> eachParsedTweet = FilterUtils.doAllFilters(unClassifiedTweet.getTweetContent());
 		
 		
 		EnumMap<Category, Double> allMAP=new EnumMap<Category,Double>(Category.class);
@@ -82,16 +80,20 @@ public class BayesClassifier  {
 			double prior=getPriorForCategory(eachCategory);
 			double product=1.0;
 			double numerator=0.0;
+			//double denominator=log(persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary());
 			double denominator=persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary();
 			
 			for (String eachTerm : eachParsedTweet) {
 				
 				product*=getFrequencyOfTermInCategory(eachTerm,eachCategory);
+				//product+=log(getFrequencyOfTermInCategory(eachTerm,eachCategory));
 			}
 			
 			numerator=prior*product;
+			//numerator=log(prior)+log(product);
 			
 			allMAP.put(eachCategory, (double)numerator/denominator);
+			//allMAP.put(eachCategory, (double)numerator-denominator);
 			
 			System.out.println(eachCategory.toString() +"::: Numerator ::: Denominator :::"+numerator +"::::"+denominator);
 			
