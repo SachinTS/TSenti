@@ -87,7 +87,7 @@ public class FilterUtils {
 
 
 	public static String stripSpecialCharacters(String rawInput) {
-		return rawInput.replaceAll("[^\\p{Alpha}\\p{Digit} ]+","");
+		return rawInput.replaceAll("[^\\p{Alpha}\\p{Digit} #]+","");
 	}
 	
 	public static Collection<String> filterStopWords(String rawInput) {
