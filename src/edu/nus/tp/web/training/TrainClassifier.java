@@ -1,4 +1,4 @@
-package Training;
+package edu.nus.tp.web.training;
 
 import java.io.IOException;
 import java.util.*;
@@ -9,7 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Tweet.ClassifiedTweet;
+import edu.nus.tp.engine.utils.Category;
+import edu.nus.tp.web.tweet.ClassifiedTweet;
+
+
 
 /**
  * Servlet implementation class TrainClassifier
@@ -47,7 +50,7 @@ public class TrainClassifier extends HttpServlet {
 			String cls=request.getParameter("classification"+j);
 			if(cls!=null)
 			{
-				classifiedTweet.add(new ClassifiedTweet(tweet, Integer.parseInt(cls)));
+				classifiedTweet.add(new ClassifiedTweet(tweet, Category.getCategoryForId(Integer.parseInt(cls))));
 			}			
 			j++;
 		}

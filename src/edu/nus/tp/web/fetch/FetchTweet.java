@@ -1,4 +1,4 @@
-package Fetch;
+package edu.nus.tp.web.fetch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
