@@ -41,7 +41,7 @@ public class BayesClassifier  {
 		
 		Collection<String> eachParsedTweet=null;
 		
-		eachParsedTweet=FilterUtils.doAllFilters(eachClassifiedTweet.getTweetContent());
+		eachParsedTweet=FilterUtils.doAllFilters(eachClassifiedTweet.getTweetContent(),eachClassifiedTweet.getTopic());
 		
 		if (eachParsedTweet!=null && eachParsedTweet.size()>0){
 			
@@ -69,8 +69,7 @@ public class BayesClassifier  {
 	 */
 	public ClassifiedTweet classify(ClassifiedTweet unClassifiedTweet){
 		
-		Collection<String> eachParsedTweet = FilterUtils.doAllFilters(unClassifiedTweet.getTweetContent());
-		
+		Collection<String> eachParsedTweet = FilterUtils.doAllFilters(unClassifiedTweet.getTweetContent(),unClassifiedTweet.getTopic());		
 		
 		EnumMap<Category, Double> allMAP=new EnumMap<Category,Double>(Category.class);
 		

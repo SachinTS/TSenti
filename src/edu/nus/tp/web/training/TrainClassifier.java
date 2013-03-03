@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.nus.tp.engine.BayesClassifier;
+import edu.nus.tp.engine.saver.InMemoryPersistence;
 import edu.nus.tp.engine.utils.Category;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
 
@@ -50,10 +52,12 @@ public class TrainClassifier extends HttpServlet {
 			String cls=request.getParameter("classification"+j);
 			if(cls!=null)
 			{
-				classifiedTweet.add(new ClassifiedTweet(tweet, Category.getCategoryForId(Integer.parseInt(cls))));
+				classifiedTweet.add(new ClassifiedTweet(tweet, Category.getCategoryForId(Integer.parseInt(cls)),request.getSession().getAttribute("topic")+""));
 			}			
 			j++;
 		}
+		BayesClassifier classifier=new BayesClassifier(new InMemoryPersistence());
+		classifier.train(classifiedTweet);
 		
 		//Remove Stop words
 		//add terms to the existing database of words

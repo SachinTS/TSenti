@@ -6,6 +6,8 @@ import static edu.nus.tp.engine.utils.Constants.STOP_WORDS;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
@@ -35,18 +37,51 @@ public class FilterUtils {
 	    coreNlp=new StanfordCoreNLP(props);
 	}
 	
-	public static Collection<String> doAllFilters(String rawInput) {
+	public static String filterHashTags(String input)
+	{
+		Pattern pattern=Pattern.compile("#\\w+");
+		Matcher matcher=pattern.matcher(input);		
+		while(matcher.find())
+		{
+			String matchedString=matcher.group();
+			String matchedTrimmedString=matchedString.substring(1);			
+			Pattern newPattern=Pattern.compile("[A-Z|a-z][a-z|0-9]*");
+			Matcher newMatcher=newPattern.matcher(matchedTrimmedString);
+			String replacementString="";
+			while(newMatcher.find())
+			{
+				replacementString+=newMatcher.group()+" ";				
+			}
+			replacementString.trim();		
+			input=input.replace(matchedString, replacementString);
+		}
+		return input;
+	}
+	public static String filterTopicTerm(String rawInput,String topic)
+	{
+		rawInput=rawInput.replace(topic.toLowerCase(),"");
+		return rawInput;
+	}
+	public static Collection<String> doAllFilters(String rawInput,String topic) {
 
-		//1. preserve emoticons
-		//TODO preserveAndStoreEmoticons(). Convert to something like a word
-		//2.strip special characters after extracting emoticons
-		rawInput=rawInput.toLowerCase(); //don't think there is a need to check null
+		//1.Strip out Hashes and tokenize Hash tags
+		rawInput=filterHashTags(rawInput);
+		
+		rawInput=rawInput.toLowerCase();
+		
+		//2.Remove Topic term from tweet
+		rawInput=filterTopicTerm(rawInput,topic);
+		
+		//3.Remove Special Characters/Symbols		 		
 		rawInput=stripSpecialCharacters(rawInput);
+		
 		System.out.println("After special characters processing : "+rawInput);
-		//3. filter stop words
+				
+		//4. filter stop words
 		Collection<String> processedTweet=filterStopWords(rawInput);
 		System.out.println("Stop word processed tweet : "+processedTweet);
-		//4. lemmatize - needs entire string, not tokens
+		
+		//5. lemmatize - needs entire string, not tokens
 		String inputTokensAsString=Joiner.on(SPACE).join(processedTweet);
 		processedTweet=lemmatize(inputTokensAsString);
 		
