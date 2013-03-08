@@ -14,15 +14,24 @@ public class ClassifiedTweet {
 
 	private String tweetContent;
 	private Category classification;
+	private String topic;
 	
-	public ClassifiedTweet(String tweet, Category classification) {
+	public ClassifiedTweet(String tweet, Category classification,String topic) {
 		
 		this.tweetContent=tweet;
 		this.classification=classification;
+		this.topic=topic;
 	}
 	
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
 	public ClassifiedTweet(String tweet) {
-		this(tweet, Category.UNCLASSIFIED);
+		this(tweet, Category.UNCLASSIFIED,"");
 	}
 
 	public String getTweetContent() {

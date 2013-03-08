@@ -31,10 +31,10 @@ public class TestClassifier {
 		
 		String testTweetString="Chinese Chinese Chinese Tokyo Japan";
 
-		tweet1=new ClassifiedTweet(tweet1String, Category.POSITIVE);
-		tweet2=new ClassifiedTweet(tweet2String, Category.POSITIVE);
-		tweet3=new ClassifiedTweet(tweet3String, Category.POSITIVE);
-		tweet4=new ClassifiedTweet(tweet4String, Category.NEGATIVE);
+		tweet1=new ClassifiedTweet(tweet1String, Category.POSITIVE,"");
+		tweet2=new ClassifiedTweet(tweet2String, Category.POSITIVE,"");
+		tweet3=new ClassifiedTweet(tweet3String, Category.POSITIVE,"");
+		tweet4=new ClassifiedTweet(tweet4String, Category.NEGATIVE,"");
 		
 		testTweetPositive=new ClassifiedTweet(testTweetString);
 		

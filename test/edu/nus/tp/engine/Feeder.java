@@ -32,7 +32,7 @@ public class Feeder {
 			for (int i =0; i< resultArray.length(); i++){
 				JSONObject tweetObj = (JSONObject) resultArray.get(i);
 				String tweet = tweetObj.get("text").toString();
-				tweetList.add(new ClassifiedTweet(tweet,Category.UNCLASSIFIED));
+				tweetList.add(new ClassifiedTweet(tweet,Category.UNCLASSIFIED,""));
 			}
 		}
 		in.close();
