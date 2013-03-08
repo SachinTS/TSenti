@@ -23,7 +23,7 @@ public class RedisPersistence implements Persistence {
 	
 	public RedisPersistence() {
 		
-		jedis=new Jedis("localhost", 6379); //TODO externalize this
+		jedis=new Jedis("50.30.35.9", 2871); //TODO externalize this
 		jedis.connect();
 	    System.out.println("Connected");
 	}
