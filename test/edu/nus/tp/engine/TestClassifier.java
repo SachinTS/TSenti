@@ -10,6 +10,7 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 
 import edu.nus.tp.engine.saver.InMemoryPersistence;
+import edu.nus.tp.engine.saver.RedisPersistence;
 import edu.nus.tp.engine.utils.Category;
 import edu.nus.tp.engine.utils.FilterUtils;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
@@ -37,10 +38,11 @@ public class TestClassifier {
 		
 		testTweetPositive=new ClassifiedTweet(testTweetString);
 		
-		classifier=new BayesClassifier(new InMemoryPersistence());
+		//classifier=new BayesClassifier(new InMemoryPersistence());
+		classifier=new BayesClassifier(new RedisPersistence());
 	}
 	
-	//@Test
+	@Test
 	public void testLearning(){
 
 		
@@ -51,7 +53,7 @@ public class TestClassifier {
 		
 	}
 	
-	//@Test
+	@Test
 	public void testClassify(){
 		classifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
 		ClassifiedTweet classifiedPositiveTweet=classifier.classify(testTweetPositive);

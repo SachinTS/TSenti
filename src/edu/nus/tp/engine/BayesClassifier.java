@@ -74,14 +74,16 @@ public class BayesClassifier  {
 		
 		EnumMap<Category, Double> allMAP=new EnumMap<Category,Double>(Category.class);
 		
+		double prior, product, numerator, denominator, eachCategoryProbability;
+		
 		for (Category eachCategory : Category.values()) {
 		
 			
-			double prior=getPriorForCategory(eachCategory);
-			double product=1.0;
-			double numerator=0.0;
+			prior=getPriorForCategory(eachCategory);
+			product=1.0;
+			numerator=0.0;
 			//double denominator=log(persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary());
-			double denominator=persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary();
+			denominator=persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary();
 			
 			for (String eachTerm : eachParsedTweet) {
 				
@@ -92,10 +94,12 @@ public class BayesClassifier  {
 			numerator=prior*product;
 			//numerator=log(prior)+log(product);
 			
-			allMAP.put(eachCategory, (double)numerator/denominator);
+			eachCategoryProbability=(double)numerator/denominator;
+			
+			allMAP.put(eachCategory, eachCategoryProbability);
 			//allMAP.put(eachCategory, (double)numerator-denominator);
 			
-			System.out.println(eachCategory.toString() +"::: Numerator ::: Denominator :::"+numerator +"::::"+denominator);
+			System.out.println(eachCategory.toString() +"::: Numerator ::: Denominator :::"+numerator +"::::"+denominator + ":::: Probability : "+eachCategoryProbability);
 			
 		}
 		
