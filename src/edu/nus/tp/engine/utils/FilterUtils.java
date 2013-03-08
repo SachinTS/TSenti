@@ -45,7 +45,7 @@ public class FilterUtils {
 		{
 			String matchedString=matcher.group();
 			String matchedTrimmedString=matchedString.substring(1);			
-			Pattern newPattern=Pattern.compile("[A-Z|a-z][a-z|0-9]*");
+			Pattern newPattern=Pattern.compile("[A-Z|a-z|0-9][a-z|0-9]*");
 			Matcher newMatcher=newPattern.matcher(matchedTrimmedString);
 			String replacementString="";
 			while(newMatcher.find())
@@ -68,6 +68,9 @@ public class FilterUtils {
 		rawInput=filterHashTags(rawInput);
 		
 		rawInput=rawInput.toLowerCase();
+		
+		//Filter out RT, Usernames and URL's
+		rawInput=filterOtherDetails(rawInput);
 		
 		//2.Remove Topic term from tweet
 		rawInput=filterTopicTerm(rawInput,topic);
@@ -119,8 +122,37 @@ public class FilterUtils {
 	}
 	*/
 	
-
-
+	private static String filterOtherDetails(String rawInput) {
+		
+		Pattern pattern=Pattern.compile("@\\w+");
+		Matcher matcher=pattern.matcher(rawInput);		
+		while(matcher.find())
+		{
+			rawInput=rawInput.replace(matcher.group(),"");
+		}
+		pattern=Pattern.compile("RT");
+		matcher=pattern.matcher(rawInput);	
+		String urlEx="[A-Z|a-z|0-9|\"|/|[..]+-[..]+|_|#|^|.|?|*|+|(|)]";
+		while(matcher.find())
+		{
+			rawInput=rawInput.replace(matcher.group(),"");
+		}
+		String urlPattern="(http://|https://)"+urlEx+"+";
+		pattern=Pattern.compile(urlPattern);
+		matcher =pattern.matcher(rawInput);
+		while(matcher.find())
+		{
+			rawInput=rawInput.replace(matcher.group(),"");
+		}
+		urlPattern=urlEx+"+(.org|.com)"+urlEx+"*";
+		pattern=Pattern.compile(urlPattern);
+		matcher =pattern.matcher(rawInput);
+		while(matcher.find())
+		{
+			rawInput=rawInput.replace(matcher.group(),"");
+		}		
+		return rawInput;
+	}
 	public static String stripSpecialCharacters(String rawInput) {
 		return rawInput.replaceAll("[^\\p{Alpha}\\p{Digit} #]+","");
 	}
