@@ -1,7 +1,10 @@
 package edu.nus.tp.engine.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Lists;
 
 public enum Category {
 
@@ -29,5 +32,9 @@ public enum Category {
 
 	public static Category getCategoryForId(int id){
 		return valueToKeyMap.get(id);
+	}
+	
+	public static List<Category> getClassificationClasses(){
+		return Lists.newArrayList(Category.POSITIVE, Category.NEGATIVE, Category.NEUTRAL);
 	}
 }

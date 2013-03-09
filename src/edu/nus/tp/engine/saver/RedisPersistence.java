@@ -1,7 +1,6 @@
 package edu.nus.tp.engine.saver;
 
-import static edu.nus.tp.engine.utils.Constants.TERM_COUNT_BY_CATEGORY;
-import static edu.nus.tp.engine.utils.Constants.TWEET_COUNT_BY_CATEGORY;
+import static edu.nus.tp.engine.utils.Constants.*;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,7 +22,7 @@ public class RedisPersistence implements Persistence {
 	
 	public RedisPersistence() {
 		
-		jedis=new Jedis("50.30.35.9", 2871); //TODO externalize this
+		jedis=new Jedis(REDIS_HOST, REDIS_PORT);
 		jedis.connect();
 	    System.out.println("Connected");
 	}
@@ -32,38 +31,36 @@ public class RedisPersistence implements Persistence {
 	public void saveTermsAndClassification(Collection<String> eachParsedTweet,
 			Category category) {
 
-		//Temporary HashMap to reference the actual HashMap belonging to this category 
-		ConcurrentHashMap <String, AtomicLong> categoryTermMap;
-				
-		
 		//for calculation of priors
 		incrementTweetCountFor(category);
-		
-		
-		switch(category)
-		{
-			case POSITIVE:
-				categoryTermMap=positiveTermMap;
-				break;
-			case NEGATIVE:
-				categoryTermMap=negativeTermMap;
-				break;
-			case NEUTRAL:
-				categoryTermMap=neutralTermMap;
-				break;
-			default:
-				return;		
-		}		
 		
 		for (String eachTerm : eachParsedTweet) {
 		
 			incrementTermCountFor(category);
 			
-			//init value set to 1 for laplace smoothing
-			categoryTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
-			categoryTermMap.get(eachTerm).incrementAndGet();						
+			switch (category) {
+				case POSITIVE:
+					//TODO need to check if this is expensive
+					positiveTermMap.putIfAbsent(eachTerm, new AtomicLong(0)); //init value set at 1 for Laplace smoothing
+					positiveTermMap.get(eachTerm).incrementAndGet();
+					break;
+				
+				case NEGATIVE:
+					negativeTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
+					negativeTermMap.get(eachTerm).incrementAndGet();
+					break;
+					
+				case NEUTRAL:
+					neutralTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
+					neutralTermMap.get(eachTerm).incrementAndGet();
+					break;
+					
+				default:
+					break;
+				}
+			
+		}
 		
-		}		
 		System.out.println("Done");
 	
 	}

@@ -38,8 +38,8 @@ public class TestClassifier {
 		
 		testTweetPositive=new ClassifiedTweet(testTweetString);
 		
-		//classifier=new BayesClassifier(new InMemoryPersistence());
-		classifier=new BayesClassifier(new RedisPersistence());
+		classifier=new BayesClassifier(new InMemoryPersistence());
+		//classifier=new BayesClassifier(new RedisPersistence());
 	}
 	
 	@Test
@@ -57,7 +57,6 @@ public class TestClassifier {
 	public void testClassify(){
 		classifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
 		ClassifiedTweet classifiedPositiveTweet=classifier.classify(testTweetPositive);
-		
 		
 		assertEquals(Category.POSITIVE,classifiedPositiveTweet.getClassification());
 		
@@ -80,8 +79,8 @@ public class TestClassifier {
 		assertEquals(Lists.newArrayList("perfect","perfection","cats","running","ran","cactus","cactuses","community","communities"),
 				FilterUtils.filterStopWords("the perfect perfection a cats running ran cactus cactuses community communities"));
 		
-		assertEquals(Lists.newArrayList("perfect","perfection","cat","run","run","cactus","cactus","community","community"),
-				FilterUtils.lemmatize("perfect perfection cat run run cactus cactus community community"));
+		assertEquals(Lists.newArrayList("the", "perfect","perfection","a", "cat","run","run","cactus","cactus","community","community"),
+				FilterUtils.lemmatize("the perfect perfection a cats running ran cactus cactuses community communities"));
 		
 	}
 

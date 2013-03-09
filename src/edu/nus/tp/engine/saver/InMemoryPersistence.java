@@ -35,34 +35,34 @@ public class InMemoryPersistence implements Persistence {
 	public void saveTermsAndClassification(Collection<String> eachParsedTweet,
 			Category category) {
 
-		//Temporary HashMap to reference the actual HashMap belonging to this category 
-		ConcurrentHashMap <String, AtomicLong> categoryTermMap;
-		
 		//for calculation of priors
-		tweetCountByCategory.get(category).incrementAndGet();		
-		
-		switch(category)
-		{
-			case POSITIVE:
-				categoryTermMap=positiveTermMap;
-				break;
-			case NEGATIVE:
-				categoryTermMap=negativeTermMap;
-				break;
-			case NEUTRAL:
-				categoryTermMap=neutralTermMap;
-				break;
-			default:
-				return;		
-		}		
+		tweetCountByCategory.get(category).incrementAndGet();
 		
 		for (String eachTerm : eachParsedTweet) {
 			
 			termCountByCategory.get(category).incrementAndGet();
-
-			//init value set to 1 for laplace smoothing
-			categoryTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
-			categoryTermMap.get(eachTerm).incrementAndGet();						
+			
+			switch (category) {
+				case POSITIVE:
+					//TODO need to check if this is expensive
+					positiveTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
+					positiveTermMap.get(eachTerm).incrementAndGet();
+					break;
+				
+				case NEGATIVE:
+					negativeTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
+					negativeTermMap.get(eachTerm).incrementAndGet();
+					break;
+					
+				case NEUTRAL:
+					neutralTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
+					neutralTermMap.get(eachTerm).incrementAndGet();
+					break;
+					
+				default:
+					break;
+				}
+			
 		}
 		
 		System.out.println("Done");
@@ -120,11 +120,11 @@ public class InMemoryPersistence implements Persistence {
 		
 		switch (category) {
 		
-		case POSITIVE: return positiveTermMap.get(term)==null?1:positiveTermMap.get(term).longValue();
+		case POSITIVE: return positiveTermMap.get(term)==null?0:positiveTermMap.get(term).longValue();
 			
-		case NEGATIVE:  return negativeTermMap.get(term)==null?1:negativeTermMap.get(term).longValue();
+		case NEGATIVE:  return negativeTermMap.get(term)==null?0:negativeTermMap.get(term).longValue();
 			
-		case NEUTRAL:  return neutralTermMap.get(term)==null?1:neutralTermMap.get(term).longValue();
+		case NEUTRAL:  return neutralTermMap.get(term)==null?0:neutralTermMap.get(term).longValue();
 			
 		default: return 0;
 		}

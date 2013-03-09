@@ -82,7 +82,7 @@ public class FilterUtils {
 				
 		//4. filter stop words
 		Collection<String> processedTweet=filterStopWords(rawInput);
-		System.out.println("Stop word processed tweet : "+processedTweet);
+		System.out.println("Stop word processed tweet : "+ processedTweet);
 		
 		//5. lemmatize - needs entire string, not tokens
 		String inputTokensAsString=Joiner.on(SPACE).join(processedTweet);
@@ -93,34 +93,6 @@ public class FilterUtils {
 		return processedTweet;
 	}
 
-	/*
-	 
-	 	public static Collection<String> doAllFilters(Collection<String> rawInput) {
-		
-		rawInput=FilterUtils.filterSpecialCharacters(rawInput);
-		rawInput=FilterUtils.filterStopWords(rawInput);
-		rawInput=FilterUtils.lemmatize(rawInput);
-		
-		return rawInput;
-	}
-	 
-	 
-	public static Collection<String> filterStopWords(Collection<String> rawInput){
-		
-		//TODO Filter stop words here
-		
-		return rawInput; //for now
-	}
-
-	public static Collection<String> lemmatize(Collection<String> rawInput) {
-		
-		return rawInput; //for now
-	}
-
-	public static Collection<String> filterSpecialCharacters(Collection<String> rawInput) {
-		return rawInput;
-	}
-	*/
 	
 	private static String filterOtherDetails(String rawInput) {
 		

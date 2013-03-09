@@ -75,9 +75,8 @@ public class BayesClassifier  {
 		
 		double prior, product, numerator, denominator, eachCategoryProbability;
 		
-		for (Category eachCategory : Category.values()) {
+		for (Category eachCategory : Category.getClassificationClasses()) {
 		
-			
 			prior=getPriorForCategory(eachCategory);
 			product=1.0;
 			numerator=0.0;
@@ -85,20 +84,19 @@ public class BayesClassifier  {
 			denominator=persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary();
 			
 			for (String eachTerm : eachParsedTweet) {
+				numerator = getFrequencyOfTermInCategory(eachTerm,eachCategory) + 1;
+				product*=numerator/denominator;
+				System.out.println(eachCategory.toString() +"::::" + eachTerm + " Numerator : "+numerator + " Denominator = " + denominator);
 				
-				product*=getFrequencyOfTermInCategory(eachTerm,eachCategory);
-				//product+=log(getFrequencyOfTermInCategory(eachTerm,eachCategory));
 			}
+			System.out.println(eachCategory.toString() +":::: Prior : "+prior);
 			
-			numerator=prior*product;
-			//numerator=log(prior)+log(product);
-			
-			eachCategoryProbability=(double)numerator/denominator;
+			eachCategoryProbability=(double)prior*product;
 			
 			allMAP.put(eachCategory, eachCategoryProbability);
 			//allMAP.put(eachCategory, (double)numerator-denominator);
 			
-			System.out.println(eachCategory.toString() +"::: Numerator ::: Denominator :::"+numerator +"::::"+denominator + ":::: Probability : "+eachCategoryProbability);
+			System.out.println(eachCategory.toString() +":::: Probability : "+eachCategoryProbability);
 			
 		}
 		
