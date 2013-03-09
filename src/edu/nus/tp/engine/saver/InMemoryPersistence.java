@@ -35,34 +35,34 @@ public class InMemoryPersistence implements Persistence {
 	public void saveTermsAndClassification(Collection<String> eachParsedTweet,
 			Category category) {
 
+		//Temporary HashMap to reference the actual HashMap belonging to this category 
+		ConcurrentHashMap <String, AtomicLong> categoryTermMap;
+		
 		//for calculation of priors
-		tweetCountByCategory.get(category).incrementAndGet();
+		tweetCountByCategory.get(category).incrementAndGet();		
+		
+		switch(category)
+		{
+			case POSITIVE:
+				categoryTermMap=positiveTermMap;
+				break;
+			case NEGATIVE:
+				categoryTermMap=negativeTermMap;
+				break;
+			case NEUTRAL:
+				categoryTermMap=neutralTermMap;
+				break;
+			default:
+				return;		
+		}		
 		
 		for (String eachTerm : eachParsedTweet) {
 			
 			termCountByCategory.get(category).incrementAndGet();
-			
-			switch (category) {
-				case POSITIVE:
-					//TODO need to check if this is expensive
-					positiveTermMap.putIfAbsent(eachTerm, new AtomicLong(0)); //init value set at 1 for Laplace smoothing
-					positiveTermMap.get(eachTerm).incrementAndGet();
-					break;
-				
-				case NEGATIVE:
-					negativeTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
-					negativeTermMap.get(eachTerm).incrementAndGet();
-					break;
-					
-				case NEUTRAL:
-					neutralTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
-					neutralTermMap.get(eachTerm).incrementAndGet();
-					break;
-					
-				default:
-					break;
-				}
-			
+
+			//init value set to 1 for laplace smoothing
+			categoryTermMap.putIfAbsent(eachTerm, new AtomicLong(0));
+			categoryTermMap.get(eachTerm).incrementAndGet();						
 		}
 		
 		System.out.println("Done");
