@@ -15,7 +15,12 @@ public enum Category {
 	;
 
 	private static Map<Integer, Category> valueToKeyMap=new HashMap<Integer,Category>(5);
-	
+
+	static {
+		for (Category cat: Category.values())
+			valueToKeyMap.put(cat.getId(), cat);
+	}
+
 	private Integer id;
 
 	private Category (int id){
@@ -33,7 +38,7 @@ public enum Category {
 	public static Category getCategoryForId(int id){
 		return valueToKeyMap.get(id);
 	}
-	
+
 	public static List<Category> getClassificationClasses(){
 		return Lists.newArrayList(Category.POSITIVE, Category.NEGATIVE, Category.NEUTRAL);
 	}
