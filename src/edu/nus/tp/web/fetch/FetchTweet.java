@@ -51,8 +51,10 @@ public class FetchTweet extends HttpServlet {
 		// Fetching tweets from twitter
 
 		String searchTopic = request.getParameter("topic");
-		if (!searchTopic.equals("null") || searchTopic != null) {
+		if (!searchTopic.equals("null") && searchTopic != null) {
 			request.getSession().setAttribute("topic",searchTopic);
+			searchTopic = searchTopic.trim().replaceAll("( )+","%20");
+			
 			URL twitterURL = new URL("http://search.twitter.com/search.json?q="
 					+ searchTopic + "&rpp=100");
 			BufferedReader in = new BufferedReader(new InputStreamReader(
