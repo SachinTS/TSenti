@@ -81,7 +81,10 @@ public class TestClassifier {
 		
 		assertEquals(Lists.newArrayList("the", "perfect","perfection","a", "cat","run","run","cactus","cactus","community","community"),
 				FilterUtils.lemmatize("the perfect perfection a cats running ran cactus cactuses community communities"));
-		
+			
+		assertEquals("hello helloo helo world what a day it is brilliant. How are you?",
+				FilterUtils.filterTriplicateCharacters("hello helloo helllllooooo wooooorld what a day it is brilliant. Hooow areee youuuu???"));
+	
 	}
 
 }

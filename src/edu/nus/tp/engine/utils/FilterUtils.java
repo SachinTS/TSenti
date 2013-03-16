@@ -62,12 +62,16 @@ public class FilterUtils {
 		rawInput=rawInput.replace(topic.toLowerCase(),"");
 		return rawInput;
 	}
+	
 	public static Collection<String> doAllFilters(String rawInput,String topic) {
 
 		//1.Strip out Hashes and tokenize Hash tags
 		rawInput=filterHashTags(rawInput);
 		
 		rawInput=rawInput.toLowerCase();
+		
+		// Filter out more than 2 sequence of same characters
+		rawInput=filterTriplicateCharacters(rawInput);
 		
 		//Filter out RT, Usernames and URL's
 		rawInput=filterOtherDetails(rawInput);
@@ -125,6 +129,11 @@ public class FilterUtils {
 		}		
 		return rawInput;
 	}
+	
+	public static String filterTriplicateCharacters(String rawInput) {
+		return rawInput.replaceAll("(.)\\1{2,}", "$1");
+	}
+	
 	public static String stripSpecialCharacters(String rawInput) {
 		return rawInput.replaceAll("[^\\p{Alpha}\\p{Digit} #]+","");
 	}
