@@ -8,9 +8,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
-	<h1>Fetched Tweets</h1>
+	<h2>Fetched Tweets</h2>
 
 	<form name="display" method="post" action="./TrainClassifier">
 

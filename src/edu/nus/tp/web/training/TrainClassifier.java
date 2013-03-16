@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.nus.tp.engine.BayesClassifier;
 import edu.nus.tp.engine.saver.InMemoryPersistence;
+import edu.nus.tp.engine.saver.RedisPersistence;
 import edu.nus.tp.engine.utils.Category;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
 
@@ -56,7 +57,7 @@ public class TrainClassifier extends HttpServlet {
 			}			
 			j++;
 		}
-		BayesClassifier classifier=new BayesClassifier(new InMemoryPersistence());
+		BayesClassifier classifier=new BayesClassifier(new RedisPersistence());
 		classifier.train(classifiedTweet);
 		
 		//Remove Stop words
