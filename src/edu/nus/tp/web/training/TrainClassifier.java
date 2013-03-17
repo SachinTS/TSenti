@@ -59,7 +59,7 @@ public class TrainClassifier extends HttpServlet {
 		}
 		BayesClassifier classifier=new BayesClassifier(new RedisPersistence());
 		classifier.train(classifiedTweet);
-		
+		request.getRequestDispatcher("./Generate.html").forward(request, response);
 		//Remove Stop words
 		//add terms to the existing database of words
 		

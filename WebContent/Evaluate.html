@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-<title>Fetch Tweets</title>
+<title>Twitter Sentiment Analysis</title>
 </head>
 <body class="landing-page">
 	<div id="bg">
@@ -12,7 +12,7 @@
 	<center>
 		<div class="box">
 
-			<form name="tweetTopic" action="./FetchTweet" method="post">
+			<form name="tweetTopic" action="./FetchTweet?action=evaluate" method="post">
 				<table align="center" cellpadding="10">
 					<tr>
 						<td valign="bottom" align="center"><h1>
@@ -26,11 +26,11 @@
 					<tr>
 						<td align=center valign="top">
 
-							<button class="btn btn-large btn-inverse" type="submit">Fetch</button>
+							<button class="btn btn-large btn-inverse" type="submit">Analyze Sentiment</button>
 						</td>
 					</tr>
 					<tr>
-						<td align="center"><a href="Evaluate.html">Evaluate</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+						<td align="center"><a href="algo.html">Classifier</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
 							href="about.html">About us</a></td>
 					</tr>
 				</table>

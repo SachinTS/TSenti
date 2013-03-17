@@ -73,9 +73,18 @@ public class FetchTweet extends HttpServlet {
 						String tweet = tweetObj.get("text").toString();
 						tweetList.add(tweet);
 					}
-
-					request.getSession().setAttribute("tweetData",tweetList);
-					request.getRequestDispatcher("./Train.jsp").forward(request, response);
+					
+					String action=request.getParameter("action");
+					if (!action.equals("null") && action != null && action.equals("evaluate") ) {
+						request.getSession().setAttribute("tweetData",tweetList);
+						request.getRequestDispatcher("./Evaluation").forward(request, response);
+					}
+					else
+					{
+					
+						request.getSession().setAttribute("tweetData",tweetList);
+						request.getRequestDispatcher("./Train.jsp").forward(request, response);
+					}
 				}
 				in.close();
 			} catch (IOException e) {
