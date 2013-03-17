@@ -16,6 +16,10 @@ public class Constants {
 	public static final int REDIS_PORT = 2871;
 	public static final String PASSWORD = "5cb88a1bcb1c2baae9335c4f964caf9d";
 	
+	public static final String POSITIVE = "POSITIVE";
+	public static final String NEUTRAL = "NEUTRAL";
+	public static final String NEGATIVE = "NEGATIVE";
+	
 	public static final Set<String> STOP_WORDS=Sets.newHashSet("I","a","about","an","are","as","at","be","by","com","for","from","how","in","is","it","of","on","or","that","the","this","to","was","what","when","where","who","will","with","the","www");
 	
 	

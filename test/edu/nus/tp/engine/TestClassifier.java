@@ -38,8 +38,8 @@ public class TestClassifier {
 		
 		testTweetPositive=new ClassifiedTweet(testTweetString);
 		
-		classifier=new BayesClassifier(new InMemoryPersistence());
-		//classifier=new BayesClassifier(new RedisPersistence());
+		//classifier=new BayesClassifier(new InMemoryPersistence());
+		classifier=new BayesClassifier(new RedisPersistence());
 	}
 	
 	@Test
