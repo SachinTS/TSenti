@@ -28,9 +28,9 @@ public class RedisPersistence implements Persistence {
 
 	public RedisPersistence() {
 
-		jedis=new Jedis(REDIS_HOST, REDIS_PORT);
-		jedis.auth(PASSWORD);
-		//jedis=new Jedis("127.0.0.1");
+		/*jedis=new Jedis(REDIS_HOST, REDIS_PORT);
+		jedis.auth(PASSWORD);*/
+		jedis=new Jedis("127.0.0.1");
 		jedis.connect();
 	    System.out.println("Connected");
 	}
@@ -144,7 +144,7 @@ public class RedisPersistence implements Persistence {
 
 	private long getTermFrequencyInClass(String className, String term) {
 		String termFrequencyString=jedis.hget(className, term);
-		return termFrequencyString==null?1:Long.parseLong(termFrequencyString);
+		return termFrequencyString==null?0:Long.parseLong(termFrequencyString);
 		//positiveTermMap.get(term)==null?1:positiveTermMap.get(term).longValue();
 	}
 
