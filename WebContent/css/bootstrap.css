@@ -6156,3 +6156,7 @@ a.badge:focus {
 .affix {
   position: fixed;
 }
+
+tr:nth-child(even) {
+    background-color: #000000;
+}

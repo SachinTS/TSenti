@@ -2,6 +2,7 @@ package edu.nus.tp.web.evaluate;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,23 +48,21 @@ public class Evaluation extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		List result = (ArrayList) request.getSession()
-				.getAttribute("tweetData");
-		List<ClassifiedTweet> unClassifiedTweetCollection = new ArrayList<ClassifiedTweet>();
-		Iterator<String> i = result.iterator();
-		int j = 0;
+		ArrayList<String> retrievedTweets = (ArrayList<String>) request.getSession().getAttribute("tweetData");
 		
-		while (i.hasNext()) {
-			String tweet=i.next();
-			String cls=request.getParameter("classification"+j);
-			if(cls!=null)
-			{
-				unClassifiedTweetCollection.add(new ClassifiedTweet(tweet, Category.getCategoryForId(0),request.getSession().getAttribute("topic")+""));
-			}			
-			j++;
+		System.out.println("List data 1 : "+retrievedTweets.get(0));
+		List<ClassifiedTweet> unClassifiedTweetCollection = new ArrayList<ClassifiedTweet>();
+		
+		for (String eachUnprocessedTweet : retrievedTweets) {
+			unClassifiedTweetCollection.add(new ClassifiedTweet(eachUnprocessedTweet, Category.UNCLASSIFIED,request.getSession().getAttribute("topic")+""));
 		}
+		
+		System.out.println("After loop...."+unClassifiedTweetCollection.size());
 		BayesClassifier classifier=new BayesClassifier(new RedisPersistence());		
-		classifier.classify(unClassifiedTweetCollection);
+		Collection<ClassifiedTweet> classifiedCollection = classifier.classify(unClassifiedTweetCollection);
+		for (ClassifiedTweet eachClassifiedTweet : classifiedCollection) {
+			System.out.println(eachClassifiedTweet.getTweetContent() +":::::::::"+ eachClassifiedTweet.getClassification());
+		}
 	}
 
 }

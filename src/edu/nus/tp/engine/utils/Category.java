@@ -36,7 +36,10 @@ public enum Category {
 	}
 
 	public static Category getCategoryForId(int id){
-		return valueToKeyMap.get(id);
+		if (id>=0 && id<=3){
+			return valueToKeyMap.get(id);
+		}
+		return UNCLASSIFIED;
 	}
 
 	public static List<Category> getClassificationClasses(){

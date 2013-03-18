@@ -75,7 +75,7 @@ public class FetchTweet extends HttpServlet {
 					}
 					
 					String action=request.getParameter("action")+"";
-					if (!action.equals("null") && action != null && action.equals("evaluate") ) {
+					if (action != null && !action.equals("null")  &&action.equals("evaluate") ) {
 						request.getSession().setAttribute("tweetData",tweetList);
 						request.getRequestDispatcher("./Evaluation").forward(request, response);
 					}

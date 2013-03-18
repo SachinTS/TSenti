@@ -27,8 +27,8 @@
 			<tr>
 				<td><%=i.next()%><br></td>
 				<td><input type="radio" name="classification<%=j%>" value="1">Positive</td>
-				<td><input type="radio" name="classification<%=j%>" value="-1">Negative</td>
-				<td><input type="radio" name="classification<%=j%>" value="0">Neutral</td>
+				<td><input type="radio" name="classification<%=j%>" value="2">Negative</td>
+				<td><input type="radio" name="classification<%=j%>" value="3">Neutral</td>
 			</tr>
 
 			<%

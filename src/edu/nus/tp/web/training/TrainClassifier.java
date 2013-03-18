@@ -51,8 +51,7 @@ public class TrainClassifier extends HttpServlet {
 		while (i.hasNext()) {
 			String tweet=i.next();
 			String cls=request.getParameter("classification"+j);
-			if(cls!=null)
-			{
+			if(cls!=null){
 				classifiedTweet.add(new ClassifiedTweet(tweet, Category.getCategoryForId(Integer.parseInt(cls)),request.getSession().getAttribute("topic")+""));
 			}			
 			j++;

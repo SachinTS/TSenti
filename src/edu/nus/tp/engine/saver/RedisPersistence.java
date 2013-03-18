@@ -161,6 +161,7 @@ public class RedisPersistence implements Persistence {
 
 
 	private void incrementTweetCountFor(Category category) {
+		System.out.println("Category : "+category);
 		jedis.zincrby(TWEET_COUNT_BY_CATEGORY, 1, category.toString());
 
 	}
