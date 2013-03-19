@@ -1,6 +1,9 @@
 package edu.nus.tp.web.training;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 import javax.servlet.ServletException;
@@ -14,7 +17,7 @@ import edu.nus.tp.engine.saver.InMemoryPersistence;
 import edu.nus.tp.engine.saver.RedisPersistence;
 import edu.nus.tp.engine.utils.Category;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
-
+import static edu.nus.tp.engine.utils.Constants.*;
 
 
 /**
@@ -53,7 +56,10 @@ public class TrainClassifier extends HttpServlet {
 			String cls=request.getParameter("classification"+j);
 			if(cls!=null)
 			{
-				classifiedTweet.add(new ClassifiedTweet(tweet, Category.getCategoryForId(Integer.parseInt(cls)),request.getSession().getAttribute("topic")+""));
+				
+				ClassifiedTweet cTweet = new ClassifiedTweet(tweet, Category.getCategoryForId(Integer.parseInt(cls)),request.getSession().getAttribute("topic")+"");		
+				writeToFile(cTweet);
+				classifiedTweet.add(cTweet);
 			}			
 			j++;
 		}
@@ -65,4 +71,22 @@ public class TrainClassifier extends HttpServlet {
 		
 	}
 
+	private void writeToFile(ClassifiedTweet tweet){
+	String file = TEMP_FILES;
+		if (tweet.getClassification() == Category.POSITIVE){
+			file += "Positive.txt";
+		} else if (tweet.getClassification() == Category.NEGATIVE){
+			file += "Negative.txt";
+		} else{
+			file += "Neutral.txt";
+		}
+		
+		try {
+		    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+		    out.println(tweet.getTweetContent());
+		    out.close();
+		} catch (IOException e) {
+		}
+	}
+	
 }
