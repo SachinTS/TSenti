@@ -15,7 +15,13 @@
 
 	<form name="display" method="post" action="./TrainClassifier">
 
-		<table>
+		<table cellpadding=5>
+			<colgroup>
+				<col span="1" style="width: 76%;">
+				<col span="1" style="width: 8%;">
+				<col span="1" style="width: 8%;">
+				<col span="1" style="width: 8%;">
+			</colgroup>
 			<%
 				List result = (ArrayList) request.getSession().getAttribute(
 						"tweetData");
