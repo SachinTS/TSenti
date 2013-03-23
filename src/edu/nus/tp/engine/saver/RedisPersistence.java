@@ -28,9 +28,9 @@ public class RedisPersistence implements Persistence {
 
 	public RedisPersistence() {
 
-		/*jedis=new Jedis(REDIS_HOST, REDIS_PORT);
-		jedis.auth(PASSWORD);*/
-		jedis=new Jedis("127.0.0.1");
+		jedis=new Jedis(REDIS_HOST, REDIS_PORT);
+		jedis.auth(PASSWORD);
+		//jedis=new Jedis("127.0.0.1");
 		jedis.connect();
 	    System.out.println("Connected");
 	}
