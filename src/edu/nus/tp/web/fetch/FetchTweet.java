@@ -56,7 +56,7 @@ public class FetchTweet extends HttpServlet {
 			searchTopic = searchTopic.trim().replaceAll("( )+","%20");
 			
 			URL twitterURL = new URL("http://search.twitter.com/search.json?q="
-					+ searchTopic + "&rpp=100");
+					+ searchTopic + "&rpp=100&lang=en");
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					twitterURL.openStream()));
 			String inputLine;
