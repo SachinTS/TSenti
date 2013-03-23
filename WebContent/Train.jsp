@@ -11,36 +11,36 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
+	
+	<center>
 	<h2>Fetched Tweets</h2>
+		<form name="display" method="post" action="./TrainClassifier">
+			<table cellpadding=10>
+				<%
+					List result = (ArrayList) request.getSession().getAttribute(
+							"tweetData");
+					Iterator<String> i = result.iterator();
+					int j = 0;
+					while (i.hasNext()) {
+				%>
 
-	<form name="display" method="post" action="./TrainClassifier">
-
-		<table>
-			<%
-				List result = (ArrayList) request.getSession().getAttribute(
-						"tweetData");
-				Iterator<String> i = result.iterator();
-				int j = 0;
-				while (i.hasNext()) {
-			%>
-
-			<tr>
-				<td><%=i.next()%><br></td>
-				<td><input type="radio" name="classification<%=j%>" value="1">Positive</td>
-				<td><input type="radio" name="classification<%=j%>" value="2">Negative</td>
-				<td><input type="radio" name="classification<%=j%>" value="3">Neutral</td>
-			</tr>
-
-			<%
-				j++;
-				}
-			%>
-			<tr>
-				<td colspan="4"><input type="submit" value="submit" /></td>
-			</tr>
-
-		</table>
-	</form>
+				<tr>
+					<td><%=i.next()%><br>
+					<input type="radio" name="classification<%=j%>" value="1">Positive
+					<input type="radio" name="classification<%=j%>" value="-1">Negative
+					<input type="radio" name="classification<%=j%>" value="0">Neutral
+					</td>
+				</tr>
+				<%
+					j++;
+					}
+				%>
+				<tr>
+					<td><input type="submit" value="submit" /></td>
+				</tr>
+			</table>
+		</form>
+	</center>
 
 </body>
 </html>

@@ -8,10 +8,10 @@ import com.google.common.collect.Lists;
 
 public enum Category {
 
-	UNCLASSIFIED(0),
+	UNCLASSIFIED(-2),
 	POSITIVE(1),
-	NEGATIVE(2),
-	NEUTRAL(3),
+	NEGATIVE(-1),
+	NEUTRAL(0),
 	;
 
 	private static Map<Integer, Category> valueToKeyMap=new HashMap<Integer,Category>(5);
