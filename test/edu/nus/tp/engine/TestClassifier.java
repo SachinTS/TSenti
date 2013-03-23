@@ -38,8 +38,8 @@ public class TestClassifier {
 
 		testTweetPositive=new ClassifiedTweet(testTweetString);
 
-		//classifier=new BayesClassifier(new InMemoryPersistence());
-		classifier=new BayesClassifier(new RedisPersistence());
+		classifier=new BayesClassifier(new InMemoryPersistence());
+		//classifier=new BayesClassifier(new RedisPersistence());
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class TestClassifier {
 
 	@Test
 	public void testClassify(){
-		//classifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
+		classifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
 		ClassifiedTweet classifiedPositiveTweet=classifier.classify(testTweetPositive);
 
 		assertEquals(Category.POSITIVE,classifiedPositiveTweet.getClassification());
