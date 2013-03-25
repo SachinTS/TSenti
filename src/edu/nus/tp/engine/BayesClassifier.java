@@ -12,12 +12,10 @@ import edu.nus.tp.engine.utils.FilterUtils;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
 
 
-public class BayesClassifier  {
+public class BayesClassifier extends AbstractClassifier {
 
-	private Persistence persistence=null;
-	
 	public BayesClassifier(Persistence persistence) {
-		this.persistence=persistence;
+		super(persistence);
 	}
 	
 	/**
@@ -49,24 +47,10 @@ public class BayesClassifier  {
 		}
 	}
 	
-	
-	public Collection<ClassifiedTweet> classify(Collection<ClassifiedTweet> unClassifiedTweetCollection){
-	
-		Collection<ClassifiedTweet> classifiedTweets=Lists.newArrayList();
-		
-		for (ClassifiedTweet eachUnClassifiedTweet : unClassifiedTweetCollection) {
-			classifiedTweets.add(classify(eachUnClassifiedTweet));
-		}
-		
-		return classifiedTweets;
-	}
-	
-	/**
-	 * O(n*m) - not sure if there is a much more optimal way to do this
-	 * 
-	 * @param unClassifiedTweet
-	 * @return
+	/* (non-Javadoc)
+	 * @see edu.nus.tp.engine.Classifier#classify(edu.nus.tp.web.tweet.ClassifiedTweet)
 	 */
+	@Override
 	public ClassifiedTweet classify(ClassifiedTweet unClassifiedTweet){
 		
 		Collection<String> eachParsedTweet = FilterUtils.doAllFilters(unClassifiedTweet.getTweetContent(),unClassifiedTweet.getTopic());		

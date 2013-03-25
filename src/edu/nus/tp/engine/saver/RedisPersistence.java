@@ -6,6 +6,7 @@ import static edu.nus.tp.engine.utils.Constants.PASSWORD;
 import static edu.nus.tp.engine.utils.Constants.POSITIVE;
 import static edu.nus.tp.engine.utils.Constants.REDIS_HOST;
 import static edu.nus.tp.engine.utils.Constants.REDIS_PORT;
+import static edu.nus.tp.engine.utils.Constants.SENTIWORDSCORE;
 import static edu.nus.tp.engine.utils.Constants.TERM_COUNT_BY_CATEGORY;
 import static edu.nus.tp.engine.utils.Constants.TWEET_COUNT_BY_CATEGORY;
 
@@ -184,6 +185,11 @@ public class RedisPersistence implements Persistence {
 
 	private Map<String,String> getTermsInClass(String className) {
 		return jedis.hgetAll(className);
+	}
+
+	@Override
+	public double getSentiScoreForWord(String word) {
+		return jedis.zscore(SENTIWORDSCORE, word);
 	}
 
 	//No lifecycle method here 

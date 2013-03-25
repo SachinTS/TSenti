@@ -16,4 +16,6 @@ public interface Persistence {
 	
 	public long getUniqueTermsInVocabulary();
 	
+	public double getSentiScoreForWord(String word);
+	
 }

@@ -134,4 +134,9 @@ public class InMemoryPersistence implements Persistence {
 	public long getTermCountByCategory(Category category) {
 		return termCountByCategory.get(category).longValue();
 	}
+
+	@Override
+	public double getSentiScoreForWord(String word) {
+		return 0;
+	}
 }
