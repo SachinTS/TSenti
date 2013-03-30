@@ -23,7 +23,6 @@
 					int j = 0;
 					while (i.hasNext()) {
 				%>
-
 				<tr>
 					<td><%=i.next()%><br>
 					<input type="radio" name="classification<%=j%>" value="1">Positive

@@ -56,7 +56,7 @@ public class TrainClassifier extends HttpServlet {
 			String cls=request.getParameter("classification"+j);
 			if(cls!=null)
 			{
-				
+				System.out.println("Class:"+cls);
 				ClassifiedTweet cTweet = new ClassifiedTweet(tweet, Category.getCategoryForId(Integer.parseInt(cls)),request.getSession().getAttribute("topic")+"");		
 				writeToFile(cTweet);
 				classifiedTweet.add(cTweet);

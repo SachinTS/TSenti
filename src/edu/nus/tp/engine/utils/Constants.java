@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 
 public class Constants {
 
-	public static final String TEMP_FILES="/Users/marklaudalauw/Desktop/";
+	public static final String TEMP_FILES="/TweetData/";
 	public static final String EMPTY_STRING="";
 	public static final String SPACE=" ";
 
