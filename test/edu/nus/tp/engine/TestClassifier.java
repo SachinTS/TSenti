@@ -18,6 +18,7 @@ public class TestClassifier {
 	private static final double DELTA = 1e-30;
 	BayesClassifier bayesClassifier=null;
 	SentiWordClassifier sentiClassifier=null;
+	HybridClassifier hybridClassifier=null;
 	ClassifiedTweet tweet1, tweet2,tweet3,tweet4,testTweetPositive, testTweetNegative;
 
 	@Before
@@ -39,6 +40,7 @@ public class TestClassifier {
 
 		bayesClassifier=new BayesClassifier(new InMemoryPersistence());
 		sentiClassifier=new SentiWordClassifier(new RedisPersistence());
+		hybridClassifier=new HybridClassifier(new RedisPersistence());
 		//classifier=new BayesClassifier(new RedisPersistence());
 	}
 
@@ -62,11 +64,24 @@ public class TestClassifier {
 
 	}
 
-	@Test
+	//@Test
 	public void testClassifySentiWord(){
 		
 		ClassifiedTweet classifiedTweet=sentiClassifier.classify(new ClassifiedTweet("Hello I am a good boy. this is super"));
 		ClassifiedTweet classifiedNegativeTweet=sentiClassifier.classify(new ClassifiedTweet("Hello I am a bad boy. this is awful"));
+
+		assertEquals(Category.POSITIVE,classifiedTweet.getClassification());
+
+
+		assertEquals(Category.NEGATIVE,classifiedNegativeTweet.getClassification());
+	}
+	
+	
+	@Test
+	public void testClassifyHybrid(){
+		
+		ClassifiedTweet classifiedTweet=hybridClassifier.classify(new ClassifiedTweet("Hello I am a good boy. this is super"));
+		ClassifiedTweet classifiedNegativeTweet=hybridClassifier.classify(new ClassifiedTweet("Hello I am a bad boy. this is awful"));
 
 		assertEquals(Category.POSITIVE,classifiedTweet.getClassification());
 

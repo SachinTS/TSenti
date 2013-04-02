@@ -16,9 +16,16 @@ public class HybridClassifier extends AbstractClassifier {
 		
 		BayesClassifier bayesClassifier =new BayesClassifier(persistence);
 		SentiWordClassifier sentiClassifier=new SentiWordClassifier(persistence);
+		ClassifiedTweet unclassifiedTweetSentiCopy=null;
+		
+		try {
+			unclassifiedTweetSentiCopy = (ClassifiedTweet)unClassifiedTweet.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		
 		ClassifiedTweet bayesClassifiedTweet = bayesClassifier.classify(unClassifiedTweet);
-		ClassifiedTweet sentiClassifiedTweet = sentiClassifier.classify(unClassifiedTweet);
+		ClassifiedTweet sentiClassifiedTweet = sentiClassifier.classify(unclassifiedTweetSentiCopy);
 		
 		System.out.println("Processing Tweet : "+unClassifiedTweet.getTweetContent());
 		System.out.println("Bayes weight :"+bayesClassifiedTweet.getWeight());
@@ -38,7 +45,7 @@ public class HybridClassifier extends AbstractClassifier {
 			
 			if (bayesWeightIsStrong && sentiWeightIsStrong){
 				System.out.println("This is screwed up. Both are strong.. Neutral???");
-				System.out.println("Bayes Weight : "+ bayesWeight + "::: Sentiweight :: "+sentiWeight);
+				System.out.println("Bayes Weight :  "+ bayesWeight + "::: Sentiweight :: "+sentiWeight);
 			}
 			else if (sentiWeightIsStrong){
 				returnTweet= sentiClassifiedTweet;

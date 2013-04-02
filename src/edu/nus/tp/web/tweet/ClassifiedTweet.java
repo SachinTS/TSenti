@@ -3,7 +3,7 @@ package edu.nus.tp.web.tweet;
 import edu.nus.tp.engine.utils.Category;
 
 
-public class ClassifiedTweet {
+public class ClassifiedTweet implements Cloneable{
 
 	private String tweetContent;
 	private Category classification;
@@ -57,4 +57,14 @@ public class ClassifiedTweet {
 		return Lists.newArrayList(Splitter.on(SPACE).omitEmptyStrings().trimResults().split(tweetContent));
 	}*/
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		try {
+			ClassifiedTweet cloned = (ClassifiedTweet) super.clone();
+			return cloned;
+		} catch (CloneNotSupportedException e) {
+			System.out.println(e);
+			return null;
+		}
+	}
 }
