@@ -144,10 +144,20 @@ public class InMemoryPersistence implements Persistence {
 
 	@Override
 	public Transaction startBatch() {
-		return null;
+		throw new RuntimeException("Invalid method");
 	}
 
 	@Override
 	public void endBatch(Transaction txn) {
+		throw new RuntimeException("Invalid method");
+	}
+
+	@Override
+	public void saveTermsAndClassificationBatch(
+			Collection<String> eachParsedTweet, Category category,
+			Transaction txn) {
+		
+		throw new RuntimeException("Invalid method");
+		
 	}
 }

@@ -37,6 +37,7 @@ public class BayesClassifier extends AbstractClassifier {
 		
 		for (int count = 0; count < batchCount; count++) {
 
+			System.out.println("Start count : "+count + " End cout ::"+ (count+1)*BATCH_SIZE);
 			Collection<ClassifiedTweet> subList=allTweets.subList(count*BATCH_SIZE, (count+1)*BATCH_SIZE);
 			trainBatch(subList);
 			
