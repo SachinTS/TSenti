@@ -1,12 +1,18 @@
 package edu.nus.tp.engine;
 
+import static edu.nus.tp.engine.utils.Constants.*;
+
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import redis.clients.jedis.Transaction;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import edu.nus.tp.engine.saver.Persistence;
@@ -37,7 +43,6 @@ public class BayesClassifier extends AbstractClassifier {
 		
 		for (int count = 0; count < batchCount; count++) {
 
-			System.out.println("Start count : "+count + " End cout ::"+ (count+1)*BATCH_SIZE);
 			Collection<ClassifiedTweet> subList=allTweets.subList(count*BATCH_SIZE, (count+1)*BATCH_SIZE);
 			trainBatch(subList);
 			
@@ -69,6 +74,8 @@ public class BayesClassifier extends AbstractClassifier {
 	 */
 	@Override
 	public ClassifiedTweet classify(ClassifiedTweet unClassifiedTweet){
+		
+		int emoticonScore=getEmoticonScore(unClassifiedTweet);
 		
 		Collection<String> eachParsedTweet = FilterUtils.doAllFilters(unClassifiedTweet.getTweetContent(),unClassifiedTweet.getTopic());		
 		
@@ -128,6 +135,24 @@ public class BayesClassifier extends AbstractClassifier {
 		return persistence.getTermFrequencyInCategory(eachTerm, eachCategory);
 		
 	}
+	public int getEmoticonScore(ClassifiedTweet unClassifiedTweet) {
+		Collection <String> inputCollection=Lists.newArrayList(Splitter.on(SPACE).omitEmptyStrings().trimResults().split(unClassifiedTweet.getTweetContent()));		
+		Collection<String> negativeEmoticonCollection=Lists.newArrayList(Iterables.filter(inputCollection,new NegativeEmoticonPredicate()));	
+		Collection<String> positiveEmoticonCollection=Lists.newArrayList(Iterables.filter(inputCollection,new PositiveEmoticonPredicate()));
+		
+		Iterator<String> i=negativeEmoticonCollection.iterator();		
+		while(i.hasNext())
+		{
+			System.out.println(i.next());
+		}
+		i=positiveEmoticonCollection.iterator();
+		while(i.hasNext())
+		{
+			System.out.println(i.next());
+		}
+		
+		return positiveEmoticonCollection.size()-negativeEmoticonCollection.size();
+	}
 
 	public double getPriorForCategory(Category category){
 		return persistence.getPriorClassificationForCategory(category);
@@ -154,6 +179,22 @@ public class BayesClassifier extends AbstractClassifier {
 		}
 		persistence.endBatch(txn);
 	
+	}
+	static class NegativeEmoticonPredicate implements Predicate<String>{
+		
+		@Override
+		public boolean apply(String eachToken) {
+			return NEGATIVE_EMOTICONS.contains(eachToken);
+		}
+		
+	}
+	static class PositiveEmoticonPredicate implements Predicate<String>{
+		
+		@Override
+		public boolean apply(String eachToken) {
+			return POSITIVE_EMOTICONS.contains(eachToken);
+		}
+		
 	}
 	
 	

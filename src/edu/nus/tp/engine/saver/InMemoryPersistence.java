@@ -13,6 +13,7 @@ import redis.clients.jedis.Transaction;
 
 import edu.nus.tp.engine.utils.Category;
 
+
 public class InMemoryPersistence implements Persistence {
 
 	private ConcurrentHashMap <String, AtomicLong> positiveTermMap = new ConcurrentHashMap <String, AtomicLong>();
@@ -144,19 +145,17 @@ public class InMemoryPersistence implements Persistence {
 
 	@Override
 	public Transaction startBatch() {
-		throw new RuntimeException("Invalid method");
+		return null;
 	}
 
 	@Override
 	public void endBatch(Transaction txn) {
-		throw new RuntimeException("Invalid method");
 	}
 
 	@Override
 	public void saveTermsAndClassificationBatch(
 			Collection<String> eachParsedTweet, Category category,
 			Transaction txn) {
-		
 		throw new RuntimeException("Invalid method");
 		
 	}

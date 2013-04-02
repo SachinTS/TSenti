@@ -13,7 +13,7 @@ import static edu.nus.tp.engine.utils.Constants.*;
 
 public class RedisTrainUtil {
 
-	public static void populateRedis() throws InterruptedException{
+	public static void populateRedis(){
 		
 		List<ClassifiedTweet> preLearnedTweets = new ArrayList<ClassifiedTweet>();
 		
@@ -53,7 +53,7 @@ public class RedisTrainUtil {
 	}
 	
 	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		
 		populateRedis();
 		
