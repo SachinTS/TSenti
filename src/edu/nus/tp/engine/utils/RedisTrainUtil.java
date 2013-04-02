@@ -13,7 +13,7 @@ import static edu.nus.tp.engine.utils.Constants.*;
 
 public class RedisTrainUtil {
 
-	public static void populateRedis(){
+	public static void populateRedisNegative(){
 		
 		List<ClassifiedTweet> preLearnedTweets = new ArrayList<ClassifiedTweet>();
 		
@@ -21,11 +21,6 @@ public class RedisTrainUtil {
 		try
 		{
 			String sCurrentLine;
-			
-			/*br = new BufferedReader(new FileReader(TEMP_FILES+"Positive.txt"));
-			while ((sCurrentLine = br.readLine()) != null) {
-				preLearnedTweets.add(new ClassifiedTweet(sCurrentLine, Category.POSITIVE, ""));		
-			}*/
 			
 			br = new BufferedReader(new FileReader(TEMP_FILES+"Negative.txt"));
 			int count=0;
@@ -53,9 +48,43 @@ public class RedisTrainUtil {
 	}
 	
 	
+	public static void populateRedisPositive(){
+		
+		List<ClassifiedTweet> preLearnedTweets = new ArrayList<ClassifiedTweet>();
+		
+		BufferedReader br = null;
+		try
+		{
+			String sCurrentLine;
+			
+			br = new BufferedReader(new FileReader(TEMP_FILES+"Positive.txt"));
+			int count=0;
+			while ((sCurrentLine = br.readLine()) != null) {
+				count++;
+				if (count%1000==0){
+					System.out.println("Current processed tweet count is : "+count);
+				}
+				preLearnedTweets.add(new ClassifiedTweet(sCurrentLine, Category.POSITIVE, ""));		
+			}
+			
+			/*br = new BufferedReader(new FileReader(TEMP_FILES+"Neutral.txt"));
+			while ((sCurrentLine = br.readLine()) != null) {
+				preLearnedTweets.add(new ClassifiedTweet(sCurrentLine, Category.NEUTRAL, ""));		
+			}*/
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
+				
+		BayesClassifier classifier=new BayesClassifier(new RedisPersistence());
+		classifier.train(preLearnedTweets);
+		
+	}
+	
 	public static void main(String[] args) {
 		
-		populateRedis();
+		populateRedisPositive();
 		
 	}
 	

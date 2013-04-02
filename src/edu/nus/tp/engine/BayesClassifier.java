@@ -1,6 +1,8 @@
 package edu.nus.tp.engine;
 
-import static edu.nus.tp.engine.utils.Constants.*;
+import static edu.nus.tp.engine.utils.Constants.NEGATIVE_EMOTICONS;
+import static edu.nus.tp.engine.utils.Constants.POSITIVE_EMOTICONS;
+import static edu.nus.tp.engine.utils.Constants.SPACE;
 
 import java.util.Collection;
 import java.util.EnumMap;

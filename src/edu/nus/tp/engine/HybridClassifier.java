@@ -31,7 +31,7 @@ public class HybridClassifier extends AbstractClassifier {
 			
 			//find absolutes
 			double bayesWeight=Math.abs(bayesClassifiedTweet.getWeight());
-			double sentiWeight=Math.abs(bayesClassifiedTweet.getWeight());
+			double sentiWeight=Math.abs(sentiClassifiedTweet.getWeight());
 			boolean sentiWeightIsStrong=sentiWeight>0.25;
 			boolean bayesWeightIsStrong=bayesWeight>0.25;
 			
