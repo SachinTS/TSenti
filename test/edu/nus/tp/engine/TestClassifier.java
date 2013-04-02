@@ -44,7 +44,7 @@ public class TestClassifier {
 		//classifier=new BayesClassifier(new RedisPersistence());
 	}
 
-	//@Test
+	@Test
 	public void testLearning(){
 
 
@@ -55,7 +55,7 @@ public class TestClassifier {
 
 	}
 
-	//@Test
+	@Test
 	public void testClassify(){
 		bayesClassifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
 		ClassifiedTweet classifiedPositiveTweet=bayesClassifier.classify(testTweetPositive);
@@ -77,7 +77,7 @@ public class TestClassifier {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testClassifyHybrid(){
 		
 		ClassifiedTweet classifiedTweet=hybridClassifier.classify(new ClassifiedTweet("Hello I am a good boy. this is super"));

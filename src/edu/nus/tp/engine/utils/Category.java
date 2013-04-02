@@ -43,6 +43,6 @@ public enum Category {
 	}
 
 	public static List<Category> getClassificationClasses(){
-		return Lists.newArrayList(Category.POSITIVE, Category.NEGATIVE, Category.NEUTRAL);
+		return Lists.newArrayList(Category.POSITIVE, Category.NEGATIVE);
 	}
 }

@@ -3,6 +3,7 @@ package edu.nus.tp.engine;
 import static edu.nus.tp.engine.utils.Constants.NEGATIVE_EMOTICONS;
 import static edu.nus.tp.engine.utils.Constants.POSITIVE_EMOTICONS;
 import static edu.nus.tp.engine.utils.Constants.SPACE;
+import static java.lang.Math.log10;
 
 import java.util.Collection;
 import java.util.EnumMap;
@@ -21,7 +22,6 @@ import edu.nus.tp.engine.saver.Persistence;
 import edu.nus.tp.engine.utils.Category;
 import edu.nus.tp.engine.utils.FilterUtils;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
-
 
 public class BayesClassifier extends AbstractClassifier {
 
@@ -87,33 +87,36 @@ public class BayesClassifier extends AbstractClassifier {
 		
 		for (Category eachCategory : Category.getClassificationClasses()) {
 		
-			prior=getPriorForCategory(eachCategory);
-			product=1.0;
+			//prior=getPriorForCategory(eachCategory);
+			prior=log10(getPriorForCategory(eachCategory));
+			product=0.0;
 			numerator=0.0;
 			//double denominator=log(persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary());
-			denominator=persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary();
+			denominator=log10(persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary());
 			
 			for (String eachTerm : eachParsedTweet) {
-				numerator = getFrequencyOfTermInCategory(eachTerm,eachCategory) + 1;
-				product*=numerator/denominator;
-				//System.out.println(eachCategory.toString() +"::::" + eachTerm + " Numerator : "+numerator + " Denominator = " + denominator);
+				numerator = log10(getFrequencyOfTermInCategory(eachTerm,eachCategory)+1);
+				//product*=numerator/denominator;
+				product+=numerator-denominator;
+				System.out.println(eachCategory.toString() +"::::" + eachTerm + " Numerator : "+numerator + " Denominator = " + denominator);
 				
 			}
-			//System.out.println(eachCategory.toString() +":::: Prior : "+prior);
+			System.out.println(eachCategory.toString() +":::: Prior : "+prior);
 			
-			eachCategoryProbability=(double)prior*product;
+			//eachCategoryProbability=(double)prior*product;
+			eachCategoryProbability=prior+product;
 			
 			allMAP.put(eachCategory, eachCategoryProbability);
 			//allMAP.put(eachCategory, (double)numerator-denominator);
 			
-			//System.out.println(eachCategory.toString() +":::: Probability : "+eachCategoryProbability);
+			System.out.println(eachCategory.toString() +":::: Probability : "+eachCategoryProbability);
 			
 		}
 		
 		
 		//getMax - this, I guess is the most inefficient method around.  No creative juice coming up 
 		Category maxCategory=Category.UNCLASSIFIED;
-		double maxProbability=Double.MIN_VALUE;
+		double maxProbability=Double.NEGATIVE_INFINITY;
 		for (Entry<Category, Double> eachCategoryEntry : allMAP.entrySet()) {
 			
 			if (eachCategoryEntry.getValue()>maxProbability){

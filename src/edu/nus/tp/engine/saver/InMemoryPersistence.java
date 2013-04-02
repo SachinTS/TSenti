@@ -156,7 +156,8 @@ public class InMemoryPersistence implements Persistence {
 	public void saveTermsAndClassificationBatch(
 			Collection<String> eachParsedTweet, Category category,
 			Transaction txn) {
-		throw new RuntimeException("Invalid method");
+		
+		saveTermsAndClassification(eachParsedTweet, category);
 		
 	}
 }
