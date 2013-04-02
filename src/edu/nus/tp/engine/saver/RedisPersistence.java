@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Transaction;
 import redis.clients.jedis.Tuple;
 import edu.nus.tp.engine.utils.Category;
 
@@ -73,7 +74,6 @@ public class RedisPersistence implements Persistence {
 
 		}
 
-		System.out.println("Done");
 
 	}
 
@@ -192,6 +192,32 @@ public class RedisPersistence implements Persistence {
 		return jedis.zscore(SENTIWORDSCORE, word);
 	}
 
+
+	@Override
+	public Transaction startBatch() {
+		Transaction txn=jedis.multi();
+		return txn;
+	}
+
+	@Override
+	public void endBatch(Transaction txn) {
+		txn.exec();		
+	}
+
+	@Override
+	public void saveTermsAndClassificationBatch(Collection<String> eachParsedTweet,
+			Category category, Transaction txn) {
+
+		//for calculation of priors
+		txn.zincrby(TWEET_COUNT_BY_CATEGORY, 1, category.toString());
+
+		for (String eachTerm : eachParsedTweet) {
+			txn.zincrby(TERM_COUNT_BY_CATEGORY, 1, category.toString());
+			txn.hincrBy(category.toString(), eachTerm,1);
+
+		}
+
+	}
 	//No lifecycle method here 
 	//FIXME Didn't disconnect any connections here 
 

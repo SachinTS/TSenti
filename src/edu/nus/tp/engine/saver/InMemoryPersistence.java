@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import redis.clients.jedis.Transaction;
+
 import edu.nus.tp.engine.utils.Category;
 
 public class InMemoryPersistence implements Persistence {
@@ -138,5 +140,14 @@ public class InMemoryPersistence implements Persistence {
 	@Override
 	public double getSentiScoreForWord(String word) {
 		return 0;
+	}
+
+	@Override
+	public Transaction startBatch() {
+		return null;
+	}
+
+	@Override
+	public void endBatch(Transaction txn) {
 	}
 }

@@ -2,8 +2,6 @@ package edu.nus.tp.engine;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +16,8 @@ import edu.nus.tp.web.tweet.ClassifiedTweet;
 public class TestClassifier {
 
 	private static final double DELTA = 1e-30;
-	BayesClassifier classifier=null;
+	BayesClassifier bayesClassifier=null;
+	SentiWordClassifier sentiClassifier=null;
 	ClassifiedTweet tweet1, tweet2,tweet3,tweet4,testTweetPositive, testTweetNegative;
 
 	@Before
@@ -38,31 +37,44 @@ public class TestClassifier {
 
 		testTweetPositive=new ClassifiedTweet(testTweetString);
 
-		classifier=new BayesClassifier(new InMemoryPersistence());
+		bayesClassifier=new BayesClassifier(new InMemoryPersistence());
+		sentiClassifier=new SentiWordClassifier(new RedisPersistence());
 		//classifier=new BayesClassifier(new RedisPersistence());
 	}
 
-	@Test
+	//@Test
 	public void testLearning(){
 
 
-		classifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
+		bayesClassifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
 
-		assertEquals(0.75, classifier.getPriorForCategory(Category.POSITIVE),DELTA);
-		assertEquals(0.25, classifier.getPriorForCategory(Category.NEGATIVE),DELTA);
+		assertEquals(0.75, bayesClassifier.getPriorForCategory(Category.POSITIVE),DELTA);
+		assertEquals(0.25, bayesClassifier.getPriorForCategory(Category.NEGATIVE),DELTA);
 
 	}
 
-	@Test
+	//@Test
 	public void testClassify(){
-		classifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
-		ClassifiedTweet classifiedPositiveTweet=classifier.classify(testTweetPositive);
+		bayesClassifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
+		ClassifiedTweet classifiedPositiveTweet=bayesClassifier.classify(testTweetPositive);
 
 		assertEquals(Category.POSITIVE,classifiedPositiveTweet.getClassification());
 
 	}
 
 	@Test
+	public void testClassifySentiWord(){
+		
+		ClassifiedTweet classifiedTweet=sentiClassifier.classify(new ClassifiedTweet("Hello I am a good boy. this is super"));
+		ClassifiedTweet classifiedNegativeTweet=sentiClassifier.classify(new ClassifiedTweet("Hello I am a bad boy. this is awful"));
+
+		assertEquals(Category.POSITIVE,classifiedTweet.getClassification());
+
+
+		assertEquals(Category.NEGATIVE,classifiedNegativeTweet.getClassification());
+	}
+	
+	//@Test
 	public void testFilter(){
 
 		assertEquals("hello world what a day it is brilliant",

@@ -2,7 +2,10 @@ package edu.nus.tp.engine;
 
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map.Entry;
+
+import redis.clients.jedis.Transaction;
 
 import com.google.common.collect.Lists;
 
@@ -23,10 +26,23 @@ public class BayesClassifier extends AbstractClassifier {
 	 * @param preLearnedTweets
 	 */
 	public void train(Collection<ClassifiedTweet> preLearnedTweets){
+
+		List<ClassifiedTweet> allTweets=Lists.newArrayList(preLearnedTweets);
+		System.out.println("Inside train batch");
 		
-		for (ClassifiedTweet eachClassifiedTweet : preLearnedTweets) {
-			train(eachClassifiedTweet);
+		int size=preLearnedTweets.size();
+		final int BATCH_SIZE=1000;
+		int batchCount=size/BATCH_SIZE;
+		int lastBatch=size%BATCH_SIZE;
+		
+		for (int count = 0; count < batchCount; count++) {
+
+			Collection<ClassifiedTweet> subList=allTweets.subList(count*BATCH_SIZE, (count+1)*BATCH_SIZE);
+			trainBatch(subList);
+			
 		}
+		
+		trainBatch(allTweets.subList(batchCount, batchCount+lastBatch));
 	}
 
 
@@ -115,6 +131,28 @@ public class BayesClassifier extends AbstractClassifier {
 		return persistence.getPriorClassificationForCategory(category);
 	}
 	
+	
+	public void trainBatch(Collection<ClassifiedTweet> preLearnedTweets) {
+		
+		
+		int count=0;
+		Transaction txn=persistence.startBatch();
+		for (ClassifiedTweet eachTweet : preLearnedTweets) {
+				count++;
+				if (count%1000==0){
+					System.out.println("Pushing to transaction : "+count);
+				}
+				
+				Collection<String> eachParsedTweet=FilterUtils.doAllFilters(eachTweet.getTweetContent(),eachTweet.getTopic());
+
+				//System.out.println("Filter done"+count);
+				if (eachParsedTweet!=null && eachParsedTweet.size()>0){
+					persistence.saveTermsAndClassificationBatch(eachParsedTweet,eachTweet.getClassification(), txn);
+				}
+		}
+		persistence.endBatch(txn);
+	
+	}
 	
 	
 }

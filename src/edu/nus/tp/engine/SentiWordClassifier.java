@@ -20,9 +20,14 @@ public class SentiWordClassifier extends AbstractClassifier{
 		
 		double totalScore=0.0;
 		for (String eachTerm : eachParsedTweet) {
-			totalScore+=persistence.getSentiScoreForWord(eachTerm);
+			//totalScore+=persistence.getSentiScoreForWord(eachTerm);
+			double thisScore=persistence.getSentiScoreForWord(eachTerm);
+			totalScore+=thisScore;
+			
+			System.out.println("Senti score : "+eachTerm + ":::::"+ thisScore);
 		}
 
+		System.out.println("Total score : "+totalScore);
 		//This is a very primitive way to do this. Need to figure out something
 		Category maxCategory=totalScore>0?Category.POSITIVE:Category.NEGATIVE;
 		
@@ -31,9 +36,6 @@ public class SentiWordClassifier extends AbstractClassifier{
 		return unClassifiedTweet;
 		
 	}
-	
-	
-	
 	
 
 }

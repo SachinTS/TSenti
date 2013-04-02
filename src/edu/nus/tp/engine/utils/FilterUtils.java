@@ -82,17 +82,17 @@ public class FilterUtils {
 		//3.Remove Special Characters/Symbols		 		
 		rawInput=stripSpecialCharacters(rawInput);
 		
-		System.out.println("After special characters processing : "+rawInput);
+		//System.out.println("After special characters processing : "+rawInput);
 				
 		//4. filter stop words
 		Collection<String> processedTweet=filterStopWords(rawInput);
-		System.out.println("Stop word processed tweet : "+ processedTweet);
+		//System.out.println("Stop word processed tweet : "+ processedTweet);
 		
 		//5. lemmatize - needs entire string, not tokens
 		String inputTokensAsString=Joiner.on(SPACE).join(processedTweet);
 		processedTweet=lemmatize(inputTokensAsString);
 		
-		System.out.println("Final post processed tweet : "+processedTweet);
+		//System.out.println("Final post processed tweet : "+processedTweet);
 		
 		return processedTweet;
 	}
