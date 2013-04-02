@@ -96,17 +96,17 @@ public class BayesClassifier extends AbstractClassifier {
 			for (String eachTerm : eachParsedTweet) {
 				numerator = getFrequencyOfTermInCategory(eachTerm,eachCategory) + 1;
 				product*=numerator/denominator;
-				System.out.println(eachCategory.toString() +"::::" + eachTerm + " Numerator : "+numerator + " Denominator = " + denominator);
+				//System.out.println(eachCategory.toString() +"::::" + eachTerm + " Numerator : "+numerator + " Denominator = " + denominator);
 				
 			}
-			System.out.println(eachCategory.toString() +":::: Prior : "+prior);
+			//System.out.println(eachCategory.toString() +":::: Prior : "+prior);
 			
 			eachCategoryProbability=(double)prior*product;
 			
 			allMAP.put(eachCategory, eachCategoryProbability);
 			//allMAP.put(eachCategory, (double)numerator-denominator);
 			
-			System.out.println(eachCategory.toString() +":::: Probability : "+eachCategoryProbability);
+			//System.out.println(eachCategory.toString() +":::: Probability : "+eachCategoryProbability);
 			
 		}
 		

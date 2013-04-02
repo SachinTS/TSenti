@@ -24,10 +24,10 @@ public class SentiWordClassifier extends AbstractClassifier{
 			double thisScore=persistence.getSentiScoreForWord(eachTerm);
 			totalScore+=thisScore;
 			
-			System.out.println("Senti score : "+eachTerm + ":::::"+ thisScore);
+			//System.out.println("Senti score : "+eachTerm + ":::::"+ thisScore);
 		}
 
-		System.out.println("Total score : "+totalScore);
+		//System.out.println("Total score : "+totalScore);
 		//This is a very primitive way to do this. Need to figure out something
 		Category maxCategory=totalScore>0?Category.POSITIVE:Category.NEGATIVE;
 		
