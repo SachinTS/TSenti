@@ -32,6 +32,7 @@ public class SentiWordClassifier extends AbstractClassifier{
 		Category maxCategory=totalScore>0?Category.POSITIVE:Category.NEGATIVE;
 		
 		unClassifiedTweet.setClassification(maxCategory);
+		unClassifiedTweet.setWeight(totalScore);
 		
 		return unClassifiedTweet;
 		

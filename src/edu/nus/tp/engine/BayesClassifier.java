@@ -116,6 +116,7 @@ public class BayesClassifier extends AbstractClassifier {
 		
 
 		unClassifiedTweet.setClassification(maxCategory);
+		unClassifiedTweet.setWeight(maxProbability);
 		
 		return unClassifiedTweet;
 		

@@ -1,12 +1,5 @@
 package edu.nus.tp.web.tweet;
 
-import static edu.nus.tp.engine.utils.Constants.SPACE;
-
-import java.util.Collection;
-
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-
 import edu.nus.tp.engine.utils.Category;
 
 
@@ -15,6 +8,7 @@ public class ClassifiedTweet {
 	private String tweetContent;
 	private Category classification;
 	private String topic;
+	private double weight;
 	
 	public ClassifiedTweet(String tweet, Category classification,String topic) {
 		
@@ -48,6 +42,14 @@ public class ClassifiedTweet {
 
 	public void setTweetContent(String tweetContent) {
 		this.tweetContent = tweetContent;
+	}
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
 	}
 
 /*	public Collection<String> getTweetContentAsTokens(){

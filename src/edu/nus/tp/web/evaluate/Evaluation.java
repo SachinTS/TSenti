@@ -3,7 +3,6 @@ package edu.nus.tp.web.evaluate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.nus.tp.engine.BayesClassifier;
+import edu.nus.tp.engine.HybridClassifier;
 import edu.nus.tp.engine.saver.RedisPersistence;
 import edu.nus.tp.engine.utils.Category;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
@@ -58,7 +57,7 @@ public class Evaluation extends HttpServlet {
 		}
 		
 		System.out.println("After loop...."+unClassifiedTweetCollection.size());
-		BayesClassifier classifier=new BayesClassifier(new RedisPersistence());		
+		HybridClassifier classifier=new HybridClassifier(new RedisPersistence());		
 		Collection<ClassifiedTweet> classifiedCollection = classifier.classify(unClassifiedTweetCollection);
 		for (ClassifiedTweet eachClassifiedTweet : classifiedCollection) {
 			System.out.println(eachClassifiedTweet.getTweetContent() +":::::::::"+ eachClassifiedTweet.getClassification());
