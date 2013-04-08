@@ -51,17 +51,22 @@ public class Evaluation extends HttpServlet {
 		
 		System.out.println("List data 1 : "+retrievedTweets.get(0));
 		List<ClassifiedTweet> unClassifiedTweetCollection = new ArrayList<ClassifiedTweet>();
-		
+		String topic=request.getSession().getAttribute("topic")+"";
 		for (String eachUnprocessedTweet : retrievedTweets) {
-			unClassifiedTweetCollection.add(new ClassifiedTweet(eachUnprocessedTweet, Category.UNCLASSIFIED,request.getSession().getAttribute("topic")+""));
+			if(eachUnprocessedTweet.contains(topic))
+				unClassifiedTweetCollection.add(new ClassifiedTweet(eachUnprocessedTweet, Category.UNCLASSIFIED,topic));
 		}
-		
-		System.out.println("After loop...."+unClassifiedTweetCollection.size());
 		HybridClassifier classifier=new HybridClassifier(new RedisPersistence());		
 		Collection<ClassifiedTweet> classifiedCollection = classifier.classify(unClassifiedTweetCollection);
-		for (ClassifiedTweet eachClassifiedTweet : classifiedCollection) {
-			System.out.println(eachClassifiedTweet.getTweetContent() +":::::::::"+ eachClassifiedTweet.getClassification());
+		
+		for(ClassifiedTweet c:classifiedCollection)
+		{
+			System.out.println(c.getTweetContent()+":"+c.getClassification());
 		}
+		
+		request.getSession().setAttribute("classifiedData",classifiedCollection);
+		request.getRequestDispatcher("./displayResult.jsp").forward(request, response);
+		
 	}
 
 }

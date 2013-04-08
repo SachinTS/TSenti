@@ -7,7 +7,6 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 
 public enum Category {
-
 	UNCLASSIFIED(-2),
 	POSITIVE(1),
 	NEGATIVE(-1),
@@ -34,7 +33,7 @@ public enum Category {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
 	public static Category getCategoryForId(int id){
 		if (id>=-1 && id<=1){
 			return valueToKeyMap.get(id);

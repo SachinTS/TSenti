@@ -36,7 +36,6 @@ public class BayesClassifier extends AbstractClassifier {
 	public void train(Collection<ClassifiedTweet> preLearnedTweets){
 
 		List<ClassifiedTweet> allTweets=Lists.newArrayList(preLearnedTweets);
-		System.out.println("Inside train batch");
 		
 		int size=preLearnedTweets.size();
 		final int BATCH_SIZE=1000;
@@ -94,14 +93,15 @@ public class BayesClassifier extends AbstractClassifier {
 			//double denominator=log(persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary());
 			denominator=log10(persistence.getTermCountByCategory(eachCategory)+persistence.getUniqueTermsInVocabulary());
 			
+			System.out.println(eachCategory+": prior :"+prior);
+			System.out.println(eachCategory+": denominator :"+denominator);
+			
 			for (String eachTerm : eachParsedTweet) {
 				numerator = log10(getFrequencyOfTermInCategory(eachTerm,eachCategory)+1);
 				//product*=numerator/denominator;
 				product+=numerator-denominator;
-				System.out.println(eachCategory.toString() +"::::" + eachTerm + " Numerator : "+numerator + " Denominator = " + denominator);
-				
 			}
-			System.out.println(eachCategory.toString() +":::: Prior : "+prior);
+			System.out.println(eachCategory+": numerator/denominator :"+product);
 			
 			//eachCategoryProbability=(double)prior*product;
 			eachCategoryProbability=prior+product;
@@ -109,23 +109,21 @@ public class BayesClassifier extends AbstractClassifier {
 			allMAP.put(eachCategory, eachCategoryProbability);
 			//allMAP.put(eachCategory, (double)numerator-denominator);
 			
-			System.out.println(eachCategory.toString() +":::: Probability : "+eachCategoryProbability);
-			
 		}
 		
 		
 		//getMax - this, I guess is the most inefficient method around.  No creative juice coming up 
 		Category maxCategory=Category.UNCLASSIFIED;
 		double maxProbability=Double.NEGATIVE_INFINITY;
-		for (Entry<Category, Double> eachCategoryEntry : allMAP.entrySet()) {
+		for (Entry<Category, Double> eachCategoryEntry : allMAP.entrySet()) {			
 			
+			System.out.println(eachCategoryEntry.getKey()+" : "+eachCategoryEntry.getValue());
 			if (eachCategoryEntry.getValue()>maxProbability){
 				maxProbability=eachCategoryEntry.getValue();
 				maxCategory=eachCategoryEntry.getKey();
 			}
 			
-		}
-		
+		}		
 
 		unClassifiedTweet.setClassification(maxCategory);
 		unClassifiedTweet.setWeight(maxProbability);

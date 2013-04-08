@@ -1,6 +1,7 @@
 package edu.nus.tp.engine;
 
 import edu.nus.tp.engine.saver.Persistence;
+import edu.nus.tp.engine.utils.Category;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
 
 public class HybridClassifier extends AbstractClassifier {
@@ -24,12 +25,15 @@ public class HybridClassifier extends AbstractClassifier {
 			e.printStackTrace();
 		}
 		
+		System.out.println("\nProcessing Tweet : "+unClassifiedTweet.getTweetContent());
 		ClassifiedTweet bayesClassifiedTweet = bayesClassifier.classify(unClassifiedTweet);
 		ClassifiedTweet sentiClassifiedTweet = sentiClassifier.classify(unclassifiedTweetSentiCopy);
 		
-		System.out.println("Processing Tweet : "+unClassifiedTweet.getTweetContent());
-		System.out.println("Bayes weight :"+bayesClassifiedTweet.getWeight());
-		System.out.println("Senti weight :"+sentiClassifiedTweet.getWeight());
+		
+		
+		System.out.println("Bayes weight :"+bayesClassifiedTweet.getWeight()+" classification:"+bayesClassifiedTweet.getClassification());
+		System.out.println("Senti weight :"+sentiClassifiedTweet.getWeight()+" classification:"+sentiClassifiedTweet.getClassification());
+		
 		
 		if (bayesClassifiedTweet.getClassification()==sentiClassifiedTweet.getClassification()){
 			returnTweet= sentiClassifiedTweet; //return either of them should be fine
@@ -40,12 +44,13 @@ public class HybridClassifier extends AbstractClassifier {
 			double bayesWeight=Math.abs(bayesClassifiedTweet.getWeight());
 			double sentiWeight=Math.abs(sentiClassifiedTweet.getWeight());
 			boolean sentiWeightIsStrong=sentiWeight>0.25;
-			boolean bayesWeightIsStrong=bayesWeight>0.25;
-			
+			boolean bayesWeightIsStrong=bayesWeight>0.25;			
 			
 			if (bayesWeightIsStrong && sentiWeightIsStrong){
 				System.out.println("This is screwed up. Both are strong.. Neutral???");
 				System.out.println("Bayes Weight :  "+ bayesWeight + "::: Sentiweight :: "+sentiWeight);
+				bayesClassifiedTweet.setClassification(Category.NEUTRAL);
+				returnTweet=bayesClassifiedTweet;
 			}
 			else if (sentiWeightIsStrong){
 				returnTweet= sentiClassifiedTweet;

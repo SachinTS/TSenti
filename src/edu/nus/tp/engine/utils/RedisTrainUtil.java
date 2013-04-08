@@ -22,7 +22,7 @@ public class RedisTrainUtil {
 		{
 			String sCurrentLine;
 			
-			br = new BufferedReader(new FileReader(TEMP_FILES+"Negative.txt"));
+			br = new BufferedReader(new FileReader(TEMP_FILES+"Negative_800k.txt"));
 			int count=0;
 			while ((sCurrentLine = br.readLine()) != null) {
 				count++;
@@ -55,12 +55,12 @@ public class RedisTrainUtil {
 		BufferedReader br = null;
 		try
 		{
-			String sCurrentLine;
-			
-			br = new BufferedReader(new FileReader(TEMP_FILES+"Positive.txt"));
+			String sCurrentLine;			
+			br = new BufferedReader(new FileReader(TEMP_FILES+"Positive_800k.txt"));
 			int count=0;
 			while ((sCurrentLine = br.readLine()) != null) {
 				count++;
+				System.out.println(count);
 				if (count%1000==0){
 					System.out.println("Current processed tweet count is : "+count);
 				}
@@ -74,9 +74,7 @@ public class RedisTrainUtil {
  
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
-		
-				
+		} 	
 		BayesClassifier classifier=new BayesClassifier(new RedisPersistence());
 		classifier.train(preLearnedTweets);
 		
@@ -85,6 +83,7 @@ public class RedisTrainUtil {
 	public static void main(String[] args) {
 		
 		populateRedisPositive();
+		populateRedisNegative();
 		
 	}
 	

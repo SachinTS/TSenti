@@ -30,9 +30,9 @@ public class RedisPersistence implements Persistence {
 
 	public RedisPersistence() {
 
-		jedis=new Jedis(REDIS_HOST, REDIS_PORT);
-		jedis.auth(PASSWORD);
-		//jedis=new Jedis("127.0.0.1");
+	    //jedis=new Jedis(REDIS_HOST, REDIS_PORT);
+		//jedis.auth(PASSWORD);
+		jedis=new Jedis("127.0.0.1",6379);
 		jedis.connect();
 	    System.out.println("Connected");
 	}
@@ -189,7 +189,10 @@ public class RedisPersistence implements Persistence {
 
 	@Override
 	public double getSentiScoreForWord(String word) {
-		return jedis.zscore(SENTIWORDSCORE, word);
+		Double c=jedis.zscore(SENTIWORDSCORE, word);
+		if(c==null)
+			c=0.0;
+		return c;
 	}
 
 

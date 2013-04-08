@@ -20,7 +20,7 @@ public class SentiWordnet2RedisUtil {
 
 	private Jedis jedis=null;
 	
-	private String pathToSWN = "/Users/Gabriel/Desktop/SentiWordNet_3.0.0_20130122.txt";
+	private String pathToSWN = "/TweetData/SentiWordNet_3.0.0_20130122.txt";
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		new SentiWordnet2RedisUtil().loadWordsAndScoreIntoRedis();
@@ -85,9 +85,9 @@ public class SentiWordnet2RedisUtil {
 	}
 
 	private void loadRedis() {
-		//jedis=new Jedis("localhost", 6379);
-		jedis=new Jedis(REDIS_HOST, REDIS_PORT);
-		jedis.auth(PASSWORD);
+		jedis=new Jedis("127.0.0.1", 6379);
+		//jedis=new Jedis(REDIS_HOST, REDIS_PORT);
+		//jedis.auth(PASSWORD);
 		jedis.connect();
 		
 	}
