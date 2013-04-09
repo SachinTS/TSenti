@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 
 import edu.nus.tp.engine.classifier.BayesClassifier;
+import edu.nus.tp.engine.classifier.ClassifierType;
 import edu.nus.tp.engine.classifier.EmoticonClassifier;
 import edu.nus.tp.engine.classifier.HybridClassifier;
 import edu.nus.tp.engine.classifier.SentiWordClassifier;
@@ -123,8 +124,18 @@ public class TestClassifier {
 	@Test
 	public void testClassifyEmoticon(){
 		
-		ClassifiedTweet classifiedTweet=emoticonClassifier.classify(new ClassifiedTweet("Hello =) I am a good boy :( . this is super :/"));
-
+		ClassifiedTweet classifiedTweet1=emoticonClassifier.classify(new ClassifiedTweet("Hello =) Hellooo :( . this is super bad :/"));
+		assertEquals(Category.NEGATIVE, classifiedTweet1.getScoreMap().get(ClassifierType.EMOTICON).getClassification());
+		
+		ClassifiedTweet classifiedTweet2=emoticonClassifier.classify(new ClassifiedTweet("Hello =) I am a good boy :D . this is super :D"));
+		assertEquals(Category.POSITIVE, classifiedTweet2.getScoreMap().get(ClassifierType.EMOTICON).getClassification());
+	
+		ClassifiedTweet classifiedTweet3=emoticonClassifier.classify(new ClassifiedTweet("Hello =) I am a good boy =) . this is super =("));
+		assertEquals(Category.POSITIVE, classifiedTweet3.getScoreMap().get(ClassifierType.EMOTICON).getClassification());
+	
+		ClassifiedTweet classifiedTweet4=emoticonClassifier.classify(new ClassifiedTweet("Hello =) I am a good boy =) . this is super =(=("));
+		assertEquals(Category.NEUTRAL, classifiedTweet4.getScoreMap().get(ClassifierType.EMOTICON).getClassification());
+	
 	}
 
 }
