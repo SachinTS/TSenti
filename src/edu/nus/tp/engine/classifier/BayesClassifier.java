@@ -1,4 +1,4 @@
-package edu.nus.tp.engine;
+package edu.nus.tp.engine.classifier;
 
 import static edu.nus.tp.engine.utils.Constants.NEGATIVE_EMOTICONS;
 import static edu.nus.tp.engine.utils.Constants.POSITIVE_EMOTICONS;
@@ -7,8 +7,10 @@ import static java.lang.Math.log10;
 
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import redis.clients.jedis.Transaction;
@@ -74,15 +76,11 @@ public class BayesClassifier extends AbstractClassifier {
 	 * @see edu.nus.tp.engine.Classifier#classify(edu.nus.tp.web.tweet.ClassifiedTweet)
 	 */
 	@Override
-	public ClassifiedTweet classify(ClassifiedTweet unClassifiedTweet){
-		
-		int emoticonScore=getEmoticonScore(unClassifiedTweet);
-		
-		Collection<String> eachParsedTweet = FilterUtils.doAllFilters(unClassifiedTweet.getTweetContent(),unClassifiedTweet.getTopic());		
-		
-		EnumMap<Category, Double> allMAP=new EnumMap<Category,Double>(Category.class);
+	public ClassifiedTweet classify(ClassifiedTweet tweet){
 		
 		double prior, product, numerator, denominator, eachCategoryProbability;
+		
+		Map<Category, Double> scoreMap = new HashMap<Category, Double>();
 		
 		for (Category eachCategory : Category.getClassificationClasses()) {
 		
@@ -96,7 +94,7 @@ public class BayesClassifier extends AbstractClassifier {
 			System.out.println(eachCategory+": prior :"+prior);
 			System.out.println(eachCategory+": denominator :"+denominator);
 			
-			for (String eachTerm : eachParsedTweet) {
+			for (String eachTerm : tweet.getTerms()) {
 				numerator = log10(getFrequencyOfTermInCategory(eachTerm,eachCategory)+1);
 				//product*=numerator/denominator;
 				product+=numerator-denominator;
@@ -106,29 +104,17 @@ public class BayesClassifier extends AbstractClassifier {
 			//eachCategoryProbability=(double)prior*product;
 			eachCategoryProbability=prior+product;
 			
-			allMAP.put(eachCategory, eachCategoryProbability);
-			//allMAP.put(eachCategory, (double)numerator-denominator);
+			//scoreMap.put(eachCategory, (double)numerator-denominator);
+			scoreMap.put(eachCategory, eachCategoryProbability);
 			
 		}
-		
-		
-		//getMax - this, I guess is the most inefficient method around.  No creative juice coming up 
-		Category maxCategory=Category.UNCLASSIFIED;
-		double maxProbability=Double.NEGATIVE_INFINITY;
-		for (Entry<Category, Double> eachCategoryEntry : allMAP.entrySet()) {			
-			
-			System.out.println(eachCategoryEntry.getKey()+" : "+eachCategoryEntry.getValue());
-			if (eachCategoryEntry.getValue()>maxProbability){
-				maxProbability=eachCategoryEntry.getValue();
-				maxCategory=eachCategoryEntry.getKey();
-			}
-			
-		}		
 
-		unClassifiedTweet.setClassification(maxCategory);
-		unClassifiedTweet.setWeight(maxProbability);
+		Score nbScore = new Score();
+		nbScore.setScores(scoreMap);
+		nbScore.setClassification(getClassification(scoreMap));
+		tweet.getScoreMap().put(ClassifierType.NAIVEBAYES, nbScore);
 		
-		return unClassifiedTweet;
+		return tweet;
 		
 	}
 	
@@ -138,24 +124,7 @@ public class BayesClassifier extends AbstractClassifier {
 		return persistence.getTermFrequencyInCategory(eachTerm, eachCategory);
 		
 	}
-	public int getEmoticonScore(ClassifiedTweet unClassifiedTweet) {
-		Collection <String> inputCollection=Lists.newArrayList(Splitter.on(SPACE).omitEmptyStrings().trimResults().split(unClassifiedTweet.getTweetContent()));		
-		Collection<String> negativeEmoticonCollection=Lists.newArrayList(Iterables.filter(inputCollection,new NegativeEmoticonPredicate()));	
-		Collection<String> positiveEmoticonCollection=Lists.newArrayList(Iterables.filter(inputCollection,new PositiveEmoticonPredicate()));
-		
-		Iterator<String> i=negativeEmoticonCollection.iterator();		
-		while(i.hasNext())
-		{
-			System.out.println(i.next());
-		}
-		i=positiveEmoticonCollection.iterator();
-		while(i.hasNext())
-		{
-			System.out.println(i.next());
-		}
-		
-		return positiveEmoticonCollection.size()-negativeEmoticonCollection.size();
-	}
+	
 
 	public double getPriorForCategory(Category category){
 		return persistence.getPriorClassificationForCategory(category);
@@ -182,22 +151,6 @@ public class BayesClassifier extends AbstractClassifier {
 		}
 		persistence.endBatch(txn);
 	
-	}
-	static class NegativeEmoticonPredicate implements Predicate<String>{
-		
-		@Override
-		public boolean apply(String eachToken) {
-			return NEGATIVE_EMOTICONS.contains(eachToken);
-		}
-		
-	}
-	static class PositiveEmoticonPredicate implements Predicate<String>{
-		
-		@Override
-		public boolean apply(String eachToken) {
-			return POSITIVE_EMOTICONS.contains(eachToken);
-		}
-		
 	}
 	
 	

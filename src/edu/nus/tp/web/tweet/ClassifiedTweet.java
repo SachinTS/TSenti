@@ -1,20 +1,30 @@
 package edu.nus.tp.web.tweet;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.nus.tp.engine.classifier.ClassifierType;
+import edu.nus.tp.engine.classifier.Score;
 import edu.nus.tp.engine.utils.Category;
 
 
-public class ClassifiedTweet implements Cloneable{
+public class ClassifiedTweet { //implements Cloneable{
 
 	private String tweetContent;
 	private Category classification;
 	private String topic;
-	private double weight;
+	private Map<ClassifierType, Score> scoreMap;
+	private Collection<String> terms;
 	
 	public ClassifiedTweet(String tweet, Category classification,String topic) {
 		
 		this.tweetContent=tweet;
 		this.classification=classification;
 		this.topic=topic;
+		scoreMap = new HashMap<ClassifierType, Score>();
+		terms = new ArrayList<String>();
 	}
 	
 	public String getTopic() {
@@ -44,19 +54,12 @@ public class ClassifiedTweet implements Cloneable{
 		this.tweetContent = tweetContent;
 	}
 
-	public double getWeight() {
-		return weight;
-	}
-
-	public void setWeight(double weight) {
-		this.weight = weight;
-	}
-
 /*	public Collection<String> getTweetContentAsTokens(){
 		if (tweetContent==null) return Lists.newArrayList();
 		return Lists.newArrayList(Splitter.on(SPACE).omitEmptyStrings().trimResults().split(tweetContent));
 	}*/
-
+	
+	/*
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		try {
@@ -67,4 +70,22 @@ public class ClassifiedTweet implements Cloneable{
 			return null;
 		}
 	}
+*/
+	public Map<ClassifierType, Score> getScoreMap() {
+		return scoreMap;
+	}
+
+	public void setScoreMap(Map<ClassifierType, Score> scoreMap) {
+		this.scoreMap = scoreMap;
+	}
+
+	public Collection<String> getTerms() {
+		return terms;
+	}
+
+	public void setTerms(Collection<String> terms) {
+		this.terms = terms;
+	}
+	
+	
 }

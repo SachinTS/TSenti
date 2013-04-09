@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.nus.tp.engine.BayesClassifier;
+import edu.nus.tp.engine.classifier.BayesClassifier;
 import edu.nus.tp.engine.saver.InMemoryPersistence;
 import edu.nus.tp.engine.saver.RedisPersistence;
 import edu.nus.tp.engine.utils.Category;

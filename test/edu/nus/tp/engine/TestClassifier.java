@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
+import edu.nus.tp.engine.classifier.BayesClassifier;
+import edu.nus.tp.engine.classifier.HybridClassifier;
+import edu.nus.tp.engine.classifier.SentiWordClassifier;
 import edu.nus.tp.engine.saver.InMemoryPersistence;
 import edu.nus.tp.engine.saver.RedisPersistence;
 import edu.nus.tp.engine.utils.Category;

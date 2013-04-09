@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.nus.tp.engine.BayesClassifier;
+import edu.nus.tp.engine.classifier.BayesClassifier;
 import edu.nus.tp.engine.saver.RedisPersistence;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
 import static edu.nus.tp.engine.utils.Constants.*;
