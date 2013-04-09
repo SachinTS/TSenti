@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.google.common.collect.Lists;
 
 import edu.nus.tp.engine.classifier.BayesClassifier;
+import edu.nus.tp.engine.classifier.EmoticonClassifier;
 import edu.nus.tp.engine.classifier.HybridClassifier;
 import edu.nus.tp.engine.classifier.SentiWordClassifier;
 import edu.nus.tp.engine.saver.InMemoryPersistence;
@@ -19,6 +20,7 @@ import edu.nus.tp.web.tweet.ClassifiedTweet;
 public class TestClassifier {
 
 	private static final double DELTA = 1e-30;
+	EmoticonClassifier emoticonClassifier = null;
 	BayesClassifier bayesClassifier=null;
 	SentiWordClassifier sentiClassifier=null;
 	HybridClassifier hybridClassifier=null;
@@ -42,7 +44,8 @@ public class TestClassifier {
 		testTweetPositive=new ClassifiedTweet(testTweetString);
 
 		bayesClassifier=new BayesClassifier(new InMemoryPersistence());
-		sentiClassifier=new SentiWordClassifier(new RedisPersistence());
+		sentiClassifier=new SentiWordClassifier(new InMemoryPersistence());
+		emoticonClassifier = new EmoticonClassifier(new InMemoryPersistence());
 		hybridClassifier=new HybridClassifier(new RedisPersistence());
 		//classifier=new BayesClassifier(new RedisPersistence());
 	}
@@ -58,7 +61,7 @@ public class TestClassifier {
 
 	}
 
-	@Test
+	//@Test
 	public void testClassify(){
 		bayesClassifier.train(Lists.newArrayList(tweet1,tweet2,tweet3,tweet4));
 		ClassifiedTweet classifiedPositiveTweet=bayesClassifier.classify(testTweetPositive);
@@ -114,6 +117,13 @@ public class TestClassifier {
 
 		assertEquals("hello helloo helo world what a day it is brilliant. How are you?",
 				FilterUtils.filterTriplicateCharacters("hello helloo helllllooooo wooooorld what a day it is brilliant. Hooow areee youuuu???"));
+
+	}
+	
+	@Test
+	public void testClassifyEmoticon(){
+		
+		ClassifiedTweet classifiedTweet=emoticonClassifier.classify(new ClassifiedTweet("Hello =) I am a good boy :( . this is super :/"));
 
 	}
 

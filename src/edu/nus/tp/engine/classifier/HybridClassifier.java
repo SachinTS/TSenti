@@ -37,7 +37,8 @@ public class HybridClassifier extends AbstractClassifier {
 		Category finalClassification = null;
 		Map <ClassifierType, Score>scoreMap = tweet.getScoreMap();
 
-		if (scoreMap.get(ClassifierType.EMOTICON).getClassification() != Category.UNCLASSIFIED){
+		if (scoreMap.get(ClassifierType.EMOTICON).getScores().get(Category.POSITIVE) != 0 || 
+				scoreMap.get(ClassifierType.EMOTICON).getScores().get(Category.NEGATIVE) != 0){
 			finalClassification = scoreMap.get(ClassifierType.EMOTICON).getClassification();
 		} else if (scoreMap.get(ClassifierType.SENTIWORD).getClassification() == scoreMap.get(ClassifierType.NAIVEBAYES).getClassification()){
 			finalClassification = scoreMap.get(ClassifierType.NAIVEBAYES).getClassification();
@@ -65,7 +66,7 @@ public class HybridClassifier extends AbstractClassifier {
 
 		Map<ClassifierType, MaxMin> maxMinMap = new HashMap<ClassifierType, MaxMin>();
 
-		for (ClassifierType type: ClassifierType.values()){
+		for (ClassifierType type: ClassifierType.getClassifierTypeToNormalize()){
 			double max = Double.NEGATIVE_INFINITY;
 			double min = Double.POSITIVE_INFINITY;
 
@@ -84,7 +85,7 @@ public class HybridClassifier extends AbstractClassifier {
 			maxMinMap.put(type, maxMin);
 		}
 
-		for (ClassifierType type: ClassifierType.values()){
+		for (ClassifierType type: ClassifierType.getClassifierTypeToNormalize()){
 			for (ClassifiedTweet tweet: tweets){
 				double positiveScore = tweet.getScoreMap().get(type).getScores().get(Category.POSITIVE)/tweet.getTerms().size();
 				double negativeScore = tweet.getScoreMap().get(type).getScores().get(Category.NEGATIVE)/tweet.getTerms().size();

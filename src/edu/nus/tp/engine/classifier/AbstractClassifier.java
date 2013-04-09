@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 
 import edu.nus.tp.engine.saver.Persistence;
 import edu.nus.tp.engine.utils.Category;
+import edu.nus.tp.engine.utils.Constants;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
 
 public abstract class AbstractClassifier implements Classifier{
@@ -30,7 +31,7 @@ public abstract class AbstractClassifier implements Classifier{
 	}
 	
 	public Category getClassification(Map<Category, Double> scoreMap){
-		
+		/*
 		Category maxCategory = Category.UNCLASSIFIED;
 		double maxScore=Double.NEGATIVE_INFINITY;
 		for (Entry<Category, Double> eachCategoryEntry : scoreMap.entrySet()) {			
@@ -39,8 +40,21 @@ public abstract class AbstractClassifier implements Classifier{
 				maxCategory = eachCategoryEntry.getKey();
 			}
 			
-		}	
-		return maxCategory;
+		}
+		return maxCategory;*/
+		
+		Category classification = Category.UNCLASSIFIED;
+		double totalPositive = scoreMap.get(Category.POSITIVE);
+		double totalNegative = scoreMap.get(Category.NEGATIVE);
+		
+		if (totalPositive>totalNegative){
+			classification = Category.POSITIVE;
+		} else if (totalNegative>totalPositive){
+			classification = Category.NEGATIVE;
+		} else {
+			classification = Category.NEUTRAL;
+		}
+		return classification;
 	}
 	
 }
