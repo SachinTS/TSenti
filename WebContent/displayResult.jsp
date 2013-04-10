@@ -53,10 +53,28 @@
 				%>
 			</table>
 			
-			Positive :<%=countP%>
-			Neutral :<%=countN%>
-			Negative :<%=countNeg%>
+			Positive : <%=countP%> &nbsp;
+			Neutral : <%=countN%> &nbsp;
+			Negative : <%=countNeg%>
 		</form>
+		
+		<form name="relevanceFeedback" action="./RelevanceFeedback" method="post">
+				<table align="center" cellpadding="10">
+	
+					<tr>
+						<td align="center" valign="middle">
+						<input type="radio" name="accuracy" value="accurate" />Accurate &nbsp; &nbsp;
+						<input type="radio" name="accuracy" value="not-accurate" />Not Accurate</td>
+					</tr>
+					<tr>
+						<td align=center valign="top">
+
+							<button class="btn btn-large btn-inverse" type="submit">Send Feedback</button>
+						</td>
+					</tr>
+					
+				</table>
+			</form>
 	</center>
 
 
