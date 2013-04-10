@@ -98,8 +98,9 @@ public class FilterUtils {
 	}
 
 	
-	private static String filterOtherDetails(String rawInput) {
+	public static String filterOtherDetails(String rawInput) {
 		
+		//Filtering Re-tweets
 		Pattern pattern=Pattern.compile("@\\w+");
 		Matcher matcher=pattern.matcher(rawInput);		
 		while(matcher.find())
@@ -107,7 +108,10 @@ public class FilterUtils {
 			rawInput=rawInput.replace(matcher.group(),"");
 		}
 		pattern=Pattern.compile("RT");
-		matcher=pattern.matcher(rawInput);	
+		matcher=pattern.matcher(rawInput);
+		
+		//Filtering URL's
+		
 		String urlEx="[A-Z|a-z|0-9|\"|/|[..]+-[..]+|_|#|^|.|?|*|+|(|)]";
 		while(matcher.find())
 		{

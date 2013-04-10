@@ -1,5 +1,9 @@
 package edu.nus.tp.web.evaluate;
 
+import static edu.nus.tp.engine.utils.Constants.TEMP_FILES;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.nus.tp.engine.classifier.BayesClassifier;
 import edu.nus.tp.engine.classifier.HybridClassifier;
 import edu.nus.tp.engine.saver.RedisPersistence;
 import edu.nus.tp.engine.utils.Category;
@@ -47,16 +52,16 @@ public class Evaluation extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		ArrayList<String> retrievedTweets = (ArrayList<String>) request.getSession().getAttribute("tweetData");
-		
+		ArrayList<String> retrievedTweets= (ArrayList<String>) request.getSession().getAttribute("tweetData");				
 		System.out.println("List data 1 : "+retrievedTweets.get(0));
 		List<ClassifiedTweet> unClassifiedTweetCollection = new ArrayList<ClassifiedTweet>();
 		String topic=request.getSession().getAttribute("topic")+"";
 		for (String eachUnprocessedTweet : retrievedTweets) {
-			if(eachUnprocessedTweet.contains(topic))
-				unClassifiedTweetCollection.add(new ClassifiedTweet(eachUnprocessedTweet, Category.UNCLASSIFIED,topic));
+			if(eachUnprocessedTweet.toLowerCase().contains(topic.toLowerCase()))
+				unClassifiedTweetCollection.add(new ClassifiedTweet(eachUnprocessedTweet, Category.UNCLASSIFIED,""));
 		}
 		HybridClassifier classifier=new HybridClassifier(new RedisPersistence());		
+		
 		Collection<ClassifiedTweet> classifiedCollection = classifier.classify(unClassifiedTweetCollection);
 		
 		for(ClassifiedTweet c:classifiedCollection)

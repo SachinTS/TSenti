@@ -84,9 +84,9 @@ public class TestClassifier {
 	}
 	
 	
-	//@Test
+	@Test
 	public void testClassifyHybrid(){
-		
+		/*
 		ClassifiedTweet classifiedTweet=hybridClassifier.classify(new ClassifiedTweet("Hello I am a good boy. this is super"));
 		ClassifiedTweet classifiedNegativeTweet=hybridClassifier.classify(new ClassifiedTweet("Hello I am a bad boy. this is awful"));
 
@@ -94,6 +94,9 @@ public class TestClassifier {
 
 
 		assertEquals(Category.NEGATIVE,classifiedNegativeTweet.getClassification());
+		*/
+		ClassifiedTweet classifiedNegativeTweet=hybridClassifier.classify(new ClassifiedTweet("50 Awesome and Beautiful Photographs of India: India is called a land of ?unity in diversity?. This multilingu... http://t.co/3zB7bzfLf0 "));
+		hybridClassifier.generateFinalClassification(classifiedNegativeTweet);
 	}
 	
 	//@Test

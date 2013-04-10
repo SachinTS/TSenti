@@ -33,16 +33,21 @@ public class HybridClassifier extends AbstractClassifier {
 
 	}
 
-	private void generateFinalClassification(ClassifiedTweet tweet) {
+	public void generateFinalClassification(ClassifiedTweet tweet) {
 		Category finalClassification = null;
 		Map <ClassifierType, Score>scoreMap = tweet.getScoreMap();
-
 		if (scoreMap.get(ClassifierType.EMOTICON).getScores().get(Category.POSITIVE) != 0 || 
 				scoreMap.get(ClassifierType.EMOTICON).getScores().get(Category.NEGATIVE) != 0){
 			finalClassification = scoreMap.get(ClassifierType.EMOTICON).getClassification();
-		} else if (scoreMap.get(ClassifierType.SENTIWORD).getClassification() == scoreMap.get(ClassifierType.NAIVEBAYES).getClassification()){
+		}else if (scoreMap.get(ClassifierType.SENTIWORD).getClassification() == scoreMap.get(ClassifierType.NAIVEBAYES).getClassification()){
+		
 			finalClassification = scoreMap.get(ClassifierType.NAIVEBAYES).getClassification();
 		} else{
+			System.out.println(tweet.getTweetContent());
+			System.out.println("Senti Positive : "+tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE));
+			System.out.println("Senti Negative : "+tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE));
+			System.out.println("Naive Positive : "+tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE));
+			System.out.println("Naive Negative : "+tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.NEGATIVE));
 			double totalPositive = tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE) +
 					tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE);
 			double totalNegative = tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE) +
@@ -55,9 +60,9 @@ public class HybridClassifier extends AbstractClassifier {
 			} else {
 				finalClassification = Category.NEUTRAL;
 			}
-			
+			System.out.println(finalClassification+"\n");
 		}
-
+		System.out.println(finalClassification);
 		tweet.setClassification(finalClassification);
 	}
 
@@ -106,8 +111,6 @@ public class HybridClassifier extends AbstractClassifier {
 	@Override
 	public ClassifiedTweet classify(ClassifiedTweet tweet) {
 
-		ClassifiedTweet returnTweet=null;
-
 		Collection<String> terms = FilterUtils.doAllFilters(tweet.getTweetContent(),tweet.getTopic());		
 		tweet.setTerms(terms);
 
@@ -118,8 +121,8 @@ public class HybridClassifier extends AbstractClassifier {
 		bayesClassifier.classify(tweet);
 		sentiClassifier.classify(tweet);
 		emoticonClassifier.classify(tweet);
-
-		return returnTweet;
+		
+		return tweet;
 
 	}
 

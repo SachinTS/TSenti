@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 
 import edu.nus.tp.engine.saver.Persistence;
 import edu.nus.tp.engine.utils.Category;
+import edu.nus.tp.engine.utils.FilterUtils;
 import edu.nus.tp.web.tweet.ClassifiedTweet;
 
 public class EmoticonClassifier extends AbstractClassifier{
@@ -33,12 +34,13 @@ public class EmoticonClassifier extends AbstractClassifier{
 
 		int positiveScore = 0;
 		int negativeScore = 0;
-
+		
+		String content=FilterUtils.filterOtherDetails(tweet.getTweetContent());
 		for (String emo: POSITIVE_EMOTICONS)
-			positiveScore+= StringUtils.countMatches(tweet.getTweetContent(), emo);
+			positiveScore+= StringUtils.countMatches(content, emo);
 
 		for (String emo: NEGATIVE_EMOTICONS)
-			negativeScore+= StringUtils.countMatches(tweet.getTweetContent(), emo);
+			negativeScore+= StringUtils.countMatches(content, emo);
 		
 		Map<Category, Double> scoreMap = new HashMap<Category, Double>();
 		scoreMap.put(Category.POSITIVE, (double) positiveScore);

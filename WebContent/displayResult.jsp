@@ -19,6 +19,9 @@
 					List result = (ArrayList) request.getSession().getAttribute(
 							"classifiedData");
 					Iterator<ClassifiedTweet> i = result.iterator();
+					int countP=0;
+					int countN=0;
+					int countNeg=0;
 					while (i.hasNext()) {
 						ClassifiedTweet ct = (ClassifiedTweet) i.next();
 				%>
@@ -26,26 +29,33 @@
 					<td>
 						<%
 							if (ct.getClassification().equals(Category.NEGATIVE)) {
+								countNeg++;
 						%>
 						<div class="alert alert-error">
 							<%
 								} else if (ct.getClassification().equals(Category.POSITIVE)){
+									countP++;
 							%>
 							<div class="alert alert-success">
 								<%
 									}else {
+										countN++;
 								%>
 								<div class="alert alert-info">
 								<% } %>
 
 								<%=ct.getTweetContent()%>
 							</div>
-					</td>
+					</td>					
 				</tr>
 				<%
 					}
 				%>
 			</table>
+			
+			Positive :<%=countP%>
+			Neutral :<%=countN%>
+			Negative :<%=countNeg%>
 		</form>
 	</center>
 
