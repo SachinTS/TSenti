@@ -45,39 +45,18 @@ public class HybridClassifier extends AbstractClassifier {
 		
 			finalClassification = scoreMap.get(ClassifierType.NAIVEBAYES).getClassification();
 		} else{
-			System.out.println(tweet.getTweetContent());
-			/*System.out.println("Senti Positive : "+tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE));
-			System.out.println("Senti Negative : "+tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE));
-			System.out.println("Naive Positive : "+tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE));
-			System.out.println("Naive Negative : "+tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.NEGATIVE));
+
 			double totalPositive = tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE) +
-					15* tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE);
-			double totalNegative = tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE) + 15*
+					Constants.NAIVE_CONSTANT* tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE);
+			double totalNegative = tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE) + Constants.NAIVE_CONSTANT*
 					tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.NEGATIVE);
 			
-			if (totalPositive>totalNegative && (totalPositive-totalNegative)/(totalNegative+totalPositive) > Constants.THRESHOLD){
+			if (totalPositive>totalNegative && (totalPositive-totalNegative)/(totalNegative) > Constants.THRESHOLD){
 				finalClassification = Category.POSITIVE;
-			} else if (totalNegative>totalPositive && (totalNegative-totalPositive)/(totalPositive+totalNegative) > Constants.THRESHOLD){
+			} else if (totalNegative>totalPositive && (totalNegative-totalPositive)/(totalPositive) > Constants.THRESHOLD){
 				finalClassification = Category.NEGATIVE;
 			} else {
 				finalClassification = Category.NEUTRAL;
-			}*/
-			
-			double naiveDifference = Math.abs(tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.NEGATIVE)-
-					tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE));
-			naiveDifference*=Constants.NAIVE_CONSTANT;
-			double sentiDifference = Math.abs(tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE) - 
-					tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE));
-			
-			System.out.println("Naive difference:"+naiveDifference);
-			System.out.println("Senti difference:"+sentiDifference);
-			
-			if (Math.abs(sentiDifference-naiveDifference) <= Constants.THRESHOLD){
-				finalClassification = Category.NEUTRAL;
-			} else if (sentiDifference>naiveDifference){
-				finalClassification = scoreMap.get(ClassifierType.SENTIWORD).getClassification();
-			} else {
-				finalClassification = scoreMap.get(ClassifierType.NAIVEBAYES).getClassification();
 			}
 			
 			System.out.println(finalClassification+"\n");

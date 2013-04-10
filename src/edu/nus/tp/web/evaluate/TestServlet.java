@@ -50,8 +50,16 @@ public class TestServlet extends HttpServlet {
 		try
 		{
 			String sCurrentLine;
+			String action=request.getParameter("action")+"";
 			
-			br = new BufferedReader(new FileReader(TEMP_FILES+"Negative.txt"));
+			if(action.equals("negative"))
+			{
+				br = new BufferedReader(new FileReader(TEMP_FILES+"Negative_Test.txt"));
+			}
+			else
+			{
+				br = new BufferedReader(new FileReader(TEMP_FILES+"Positive_Test.txt"));
+			}
 			int count=0;
 			while ((sCurrentLine = br.readLine()) != null) {				
 				retrievedTweets.add(sCurrentLine);		

@@ -24,8 +24,8 @@ public class Constants {
 	public static final String NEGATIVE = "NEGATIVE";
 	public static final String SENTIWORDSCORE = "SENTIWORDSCORE";
 	
-	public static final double THRESHOLD = 0.04;
-	public static final double NAIVE_CONSTANT = 7.5;
+	public static final double THRESHOLD = 0.025;
+	public static final double NAIVE_CONSTANT = 15;
 	
 
 	public static final Set<String> STOP_WORDS=Sets.newHashSet("I","a","about","an","are","as","at","be","by","com","for","from","how","in","is","it","of","on","or","that","the","this","to","was","what","when","where","who","will","with","the","www","and");

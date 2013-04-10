@@ -59,12 +59,12 @@
 		</form>
 		
 		<form name="relevanceFeedback" action="./RelevanceFeedback" method="post">
-				<table align="center" cellpadding="10">
-	
+				<table align="center" cellpadding="10">	
 					<tr>
 						<td align="center" valign="middle">
-						<input type="radio" name="accuracy" value="accurate" />Accurate &nbsp; &nbsp;
-						<input type="radio" name="accuracy" value="not-accurate" />Not Accurate</td>
+						The results are :  &nbsp;&nbsp;
+						<input type="radio" name="accuracy" value="accurate" />&nbsp;&nbsp;Accurate &nbsp; &nbsp;&nbsp;&nbsp;
+						<input type="radio" name="accuracy" value="not-accurate" />&nbsp;&nbsp;Not Accurate</td>
 					</tr>
 					<tr>
 						<td align=center valign="top">
