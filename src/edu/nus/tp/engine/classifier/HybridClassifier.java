@@ -19,13 +19,13 @@ public class HybridClassifier extends AbstractClassifier {
 
 	public List<ClassifiedTweet> classify(List<ClassifiedTweet> tweets) {
 
-		for (ClassifiedTweet tweet: tweets){
+		for (ClassifiedTweet tweet : tweets) {
 			classify(tweet);
 		}
 
 		normalizeScoring(tweets);
 
-		for (ClassifiedTweet tweet: tweets){
+		for (ClassifiedTweet tweet : tweets) {
 			generateFinalClassification(tweet);
 		}
 
@@ -39,27 +39,47 @@ public class HybridClassifier extends AbstractClassifier {
 		if (scoreMap.get(ClassifierType.EMOTICON).getScores().get(Category.POSITIVE) != 0 || 
 				scoreMap.get(ClassifierType.EMOTICON).getScores().get(Category.NEGATIVE) != 0){
 			finalClassification = scoreMap.get(ClassifierType.EMOTICON).getClassification();
-		}else if (scoreMap.get(ClassifierType.SENTIWORD).getClassification() == scoreMap.get(ClassifierType.NAIVEBAYES).getClassification()){
+		}/*else {		
+			finalClassification = scoreMap.get(ClassifierType.NAIVEBAYES).getClassification();
+		}*/else if (scoreMap.get(ClassifierType.SENTIWORD).getClassification() == scoreMap.get(ClassifierType.NAIVEBAYES).getClassification()){
 		
 			finalClassification = scoreMap.get(ClassifierType.NAIVEBAYES).getClassification();
 		} else{
 			System.out.println(tweet.getTweetContent());
-			System.out.println("Senti Positive : "+tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE));
+			/*System.out.println("Senti Positive : "+tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE));
 			System.out.println("Senti Negative : "+tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE));
 			System.out.println("Naive Positive : "+tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE));
 			System.out.println("Naive Negative : "+tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.NEGATIVE));
 			double totalPositive = tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE) +
-					tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE);
-			double totalNegative = tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE) +
+					15* tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE);
+			double totalNegative = tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE) + 15*
 					tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.NEGATIVE);
 			
-			if (totalPositive>totalNegative && (totalPositive-totalNegative)/totalNegative > Constants.THRESHOLD){
+			if (totalPositive>totalNegative && (totalPositive-totalNegative)/(totalNegative+totalPositive) > Constants.THRESHOLD){
 				finalClassification = Category.POSITIVE;
-			} else if (totalNegative>totalPositive && (totalNegative-totalPositive)/totalPositive > Constants.THRESHOLD){
+			} else if (totalNegative>totalPositive && (totalNegative-totalPositive)/(totalPositive+totalNegative) > Constants.THRESHOLD){
 				finalClassification = Category.NEGATIVE;
 			} else {
 				finalClassification = Category.NEUTRAL;
+			}*/
+			
+			double naiveDifference = Math.abs(tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.NEGATIVE)-
+					tweet.getScoreMap().get(ClassifierType.NAIVEBAYES).getScores().get(Category.POSITIVE));
+			naiveDifference*=Constants.NAIVE_CONSTANT;
+			double sentiDifference = Math.abs(tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.NEGATIVE) - 
+					tweet.getScoreMap().get(ClassifierType.SENTIWORD).getScores().get(Category.POSITIVE));
+			
+			System.out.println("Naive difference:"+naiveDifference);
+			System.out.println("Senti difference:"+sentiDifference);
+			
+			if (Math.abs(sentiDifference-naiveDifference) <= Constants.THRESHOLD){
+				finalClassification = Category.NEUTRAL;
+			} else if (sentiDifference>naiveDifference){
+				finalClassification = scoreMap.get(ClassifierType.SENTIWORD).getClassification();
+			} else {
+				finalClassification = scoreMap.get(ClassifierType.NAIVEBAYES).getClassification();
 			}
+			
 			System.out.println(finalClassification+"\n");
 		}
 		System.out.println(finalClassification);
@@ -71,37 +91,52 @@ public class HybridClassifier extends AbstractClassifier {
 
 		Map<ClassifierType, MaxMin> maxMinMap = new HashMap<ClassifierType, MaxMin>();
 
-		for (ClassifierType type: ClassifierType.getClassifierTypeToNormalize()){
+		for (ClassifierType type : ClassifierType
+				.getClassifierTypeToNormalize()) {
 			double max = Double.NEGATIVE_INFINITY;
 			double min = Double.POSITIVE_INFINITY;
 
-			for (ClassifiedTweet tweet: tweets){
-				double positiveScore = tweet.getScoreMap().get(type).getScores().get(Category.POSITIVE)/tweet.getTerms().size();
-				double negativeScore = tweet.getScoreMap().get(type).getScores().get(Category.NEGATIVE)/tweet.getTerms().size();
+			for (ClassifiedTweet tweet : tweets) {
+				double positiveScore = tweet.getScoreMap().get(type)
+						.getScores().get(Category.POSITIVE)
+						/ tweet.getTerms().size();
+				double negativeScore = tweet.getScoreMap().get(type)
+						.getScores().get(Category.NEGATIVE)
+						/ tweet.getTerms().size();
 
-				max = positiveScore>max?positiveScore:max;
-				max = negativeScore>max?negativeScore:max;
+				max = positiveScore > max ? positiveScore : max;
+				max = negativeScore > max ? negativeScore : max;
 
-				min = positiveScore<min?positiveScore:min;
-				min = negativeScore<min?negativeScore:min;
+				min = positiveScore < min ? positiveScore : min;
+				min = negativeScore < min ? negativeScore : min;
 
 			}
 			MaxMin maxMin = new MaxMin(max, min);
 			maxMinMap.put(type, maxMin);
 		}
 
-		for (ClassifierType type: ClassifierType.getClassifierTypeToNormalize()){
-			for (ClassifiedTweet tweet: tweets){
-				double positiveScore = tweet.getScoreMap().get(type).getScores().get(Category.POSITIVE)/tweet.getTerms().size();
-				double negativeScore = tweet.getScoreMap().get(type).getScores().get(Category.NEGATIVE)/tweet.getTerms().size();
+		for (ClassifierType type : ClassifierType
+				.getClassifierTypeToNormalize()) {
+			for (ClassifiedTweet tweet : tweets) {
+				double positiveScore = tweet.getScoreMap().get(type)
+						.getScores().get(Category.POSITIVE)
+						/ tweet.getTerms().size();
+				double negativeScore = tweet.getScoreMap().get(type)
+						.getScores().get(Category.NEGATIVE)
+						/ tweet.getTerms().size();
 
 				double maxScore = maxMinMap.get(type).getMax();
 				double minScore = maxMinMap.get(type).getMin();
 
-				positiveScore = (positiveScore-minScore)/(maxScore-minScore);
-				negativeScore = (negativeScore-minScore)/(maxScore-minScore);
-				tweet.getScoreMap().get(type).getScores().put(Category.POSITIVE,positiveScore);
-				tweet.getScoreMap().get(type).getScores().put(Category.NEGATIVE,negativeScore);
+				positiveScore = (positiveScore - minScore)
+						/ (maxScore - minScore);
+				negativeScore = (negativeScore - minScore)
+						/ (maxScore - minScore);
+				tweet.getScoreMap().get(type).getScores()
+						.put(Category.POSITIVE, positiveScore);
+
+				tweet.getScoreMap().get(type).getScores()
+						.put(Category.NEGATIVE, negativeScore);
 			}
 		}
 
@@ -111,17 +146,20 @@ public class HybridClassifier extends AbstractClassifier {
 	@Override
 	public ClassifiedTweet classify(ClassifiedTweet tweet) {
 
-		Collection<String> terms = FilterUtils.doAllFilters(tweet.getTweetContent(),tweet.getTopic());		
+		Collection<String> terms = FilterUtils.doAllFilters(
+				tweet.getTweetContent(), tweet.getTopic());
 		tweet.setTerms(terms);
 
-		BayesClassifier bayesClassifier =new BayesClassifier(persistence);
-		SentiWordClassifier sentiClassifier=new SentiWordClassifier(persistence);
-		EmoticonClassifier emoticonClassifier = new EmoticonClassifier(persistence);
+		BayesClassifier bayesClassifier = new BayesClassifier(persistence);
+		SentiWordClassifier sentiClassifier = new SentiWordClassifier(
+				persistence);
+		EmoticonClassifier emoticonClassifier = new EmoticonClassifier(
+				persistence);
 
 		bayesClassifier.classify(tweet);
 		sentiClassifier.classify(tweet);
 		emoticonClassifier.classify(tweet);
-		
+
 		return tweet;
 
 	}
